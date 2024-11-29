@@ -1,0 +1,16 @@
+//ZFSCRT5  JOB (ACCT),'CREATE ZFS',CLASS=A,MSGCLASS=H,NOTIFY=RRFORTE    00010002
+//STEP1    EXEC PGM=IOEAGFMT,REGION=0M                                  00020002
+//SYSPRINT DD SYSOUT=*                                                  00030000
+//SYSUDUMP DD SYSOUT=*                                                  00040000
+//STDOUT   DD SYSOUT=*                                                  00050000
+//STDERR   DD SYSOUT=*                                                  00060000
+//CEEDUMP  DD SYSOUT=*                                                  00070000
+//SYSIN    DD *                                                         00080000
+  -AGGREGATE RRFORTE.ZFS                                                00090000
+  -BLOCKS 50000                                                         00100002
+  -OWNER RRFORTE                                                        00110000
+  -GROUP G$MIGRA                                                        00120000
+  -PERMS 775                                                            00130000
+  -VNAME B5USR1                                                         00140002
+/*                                                                      00150000
+

@@ -1,0 +1,106 @@
+//ZFS$DOS     JOB  NOTIFY=&SYSUID,REGION=0M
+//*
+//*==================================================================*
+//*  Para  poder  "variables"  en  Sysin;  jes2  tiene  que  ser     *
+//*        establecido, segum:                                       *
+//*  /$T  JOBCLASS(*),SYSSYN=ALLOW                                   *
+//*==================================================================*
+//*
+//       EXPORT  SYMLIST=(ZFSDSN,VOLUMEN)
+//*
+//       SET  ZFSDSN=RIRI.ZFS.DOS
+//       SET  VOLUMEN=B5USR1
+//*
+//*------------------------------------------------------------------*
+//*  Define  el  zFS    (Vsam-Linear).                               *
+//*------------------------------------------------------------------*
+//CREATE      EXEC  PGM=IDCAMS
+//SYSPRINT  DD SYSOUT=*
+//SYSIN     DD *,SYMBOLS=JCLONLY
+  DEFINE                                            -
+       CLUSTER                                      -
+         (                                          -
+             NAME(&ZFSDSN)                          -
+             LINEAR                                 -
+             TRK(30)  VOLUME(&VOLUMEN)              -
+             SHAREOPTIONS(3)                        -
+         )
+/*
+//*
+//       IF  (CREATE.RC  =  0)              THEN
+//*
+//*------------------------------------------------------------------*
+//*  Formatea  el  zFS.                                              *
+//*------------------------------------------------------------------*
+//FORMAT      EXEC  PGM=IOEAGFMT,
+//             PARM='-aggregate  &ZFSDSN  -compat'
+//SYSPRINT  DD SYSOUT=*
+//STDOUT    DD SYSOUT=*
+//STDERR    DD SYSOUT=*
+//*
+//       ENDIF
+//*
+//       IF  (FORMAT.RC  =  0)              THEN
+//*
+//*------------------------------------------------------------------*
+//*  Create  Mountpoint  Directory                                   *
+//*------------------------------------------------------------------*
+//CREADIR     EXEC  PGM=IKJEFT01,DYNAMNBR=10
+//SYSTSPRT  DD SYSOUT=*
+//SYSTSIN   DD *
+  PROFILE  MSGID  WTPMSG
+  MKDIR    '/u/CURSO/RIRI'                         +
+           MODE(7,7,5)
+/*
+//*
+//       ENDIF
+//*
+//       IF  (CREADIR.RC  =  0)             THEN
+//*
+//*------------------------------------------------------------------*
+//*  Mount  the  Dataset  at  the  Mountpoint  Directory             *
+//*------------------------------------------------------------------*
+//MOUNT       EXEC  PGM=IKJEFT01,DYNAMNBR=10
+//SYSTSPRT  DD SYSOUT=*
+//SYSTSIN   DD *,SYMBOLS=JCLONLY
+  PROFILE  MSGID  WTPMSG
+  MOUNT    TYPE(ZFS)                               +
+           MODE(RDWR)                              +
+    MOUNTPOINT('/u/CURSO/RIRI')                    +
+    FILESYSTEM('&ZFSDSN')
+/*
+//*------------------------------------------------------------------*
+//*  Change  Permissions                                             *
+//*------------------------------------------------------------------*
+//CHMOD       EXEC  PGM=IKJEFT01,DYNAMNBR=10
+//SYSEXEC   DD DISP=SHR,DSN=SYS1.SBPXEXEC
+//SYSTSPRT  DD SYSOUT=*
+//SYSTSIN   DD *
+  OSHELL  chmod  -R  777                                           +
+          /u/CURSO/RIRI
+/*
+//*
+//       ENDIF
+//*
+//
+//
+//
+//
+//
+//*------------------------------------------------------------------*
+//*  Create  un  File  (vacio).                                      *
+//*------------------------------------------------------------------*
+//CREATEFT    EXEC  PGM=IKJEFT01,DYNAMNBR=10
+//SYSEXEC   DD DISP=SHR,DSN=SYS1.SBPXEXEC
+//SYSTSPRT  DD SYSOUT=*
+//SYSTSIN   DD *
+  OSHELL  touch  '@pathprefix@'                                    +
+          '/u/CURSO/RIRI/archivo.vacio'
+  OSHELL  chtag  -t  -c  IBM1047                                   +
+          '/u/CURSO/RIRI/archivo.vacio'
+  CALL 'SYS1.LINKLIB(IEFBR14)'
+/*
+//*------------------------------------------------------------------*
+//*                        ---  FIN  ---                             *
+//*------------------------------------------------------------------*
+

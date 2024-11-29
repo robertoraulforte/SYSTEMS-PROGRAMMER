@@ -1,0 +1,35 @@
+//OCOPY01      JOB     REGION=0M,NOTIFY=&SYSUID
+//*
+//*------------------------------------------------------------------*
+//*                                                                  |
+//*------------------------------------------------------------------*
+//COPY2UNX    EXEC  PGM=IKJEFT01,DYNAMNBR=3
+//*
+//ENTRADA   DD DISP=SHR,DSN=RIRI.LYB(IEFBR14)
+//SALIDA    DD PATH='/u/CURSO/dirdir/ver01',
+//             PATHDISP=(KEEP,KEEP),
+//             PATHOPTS=(OWRONLY,OCREAT,OEXCL),
+//             PATHMODE=(SIWUSR,SIWGRP)
+//SYSTSPRT  DD SYSOUT=*
+//SYSTSIN   DD *
+
+  OCOPY    INDD(ENTRADA)   OUTDD(SALIDA)
+
+//*------------------------------------------------------------------*
+//*                                                                  *
+//*------------------------------------------------------------------*
+//
+//
+//
+  OCOPY    INDD(ENTRADA)   OUTDD(SALIDA)              +
+  CONVERT('SYS1.LINKLIB(BPXFX311)')                   +
+  FROM1047                                            +
+  PATHOPTS(USE)                                       +
+  TEXT
+//
+//
+//
+//*------------------------------------------------------------------*
+//*                        ---  FIN  ---                             *
+//*------------------------------------------------------------------*
+

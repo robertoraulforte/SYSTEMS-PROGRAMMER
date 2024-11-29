@@ -1,0 +1,6 @@
+//UNMOUNT1 EXEC PGM=IKJEFT01                                            00010000
+//SYSTSPRT DD SYSOUT=*                                                  00020000
+//SYSTSIN  DD *                                                         00030000
+  MOUNT FILESYSTEM('RRFORTE.ZFS') TYPE(ZFS) MODE(UNMOUNT)               00040000
+/*                                                                      00050000
+

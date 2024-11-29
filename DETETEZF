@@ -1,0 +1,7 @@
+//DELETEVS JOB (ACCT),'DELETE VSAM',CLASS=A,MSGCLASS=H,NOTIFY=&SYSUID   00010001
+//STEP1    EXEC PGM=IDCAMS                                              00020001
+//SYSPRINT DD SYSOUT=*                                                  00030001
+//SYSIN    DD *                                                         00040001
+  DELETE 'RRFORTE.ZFS' CLUSTER PURGE                                    00050001
+/*                                                                      00060001
+
