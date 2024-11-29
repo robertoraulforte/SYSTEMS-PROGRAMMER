@@ -1,0 +1,3743 @@
+
+
+CAPACITACION GYL SYSTEM PROGRAMMER
+
+
+
+El *interrupt handling* (manejo de interrupciones) en IBM mainframe es el proceso por el cual el sistema operativo del mainframe (como z/OS) responde a las interrupciones, que son señales generadas por el hardware o el software que requieren atención inmediata. Estas interrupciones pueden ser causadas por diferentes eventos, como errores de hardware, peticiones de entrada/salida (I/O), o interrupciones de software como llamadas de servicio.
+
+### Tipos de Interrupciones en Mainframe
+Las interrupciones en mainframes IBM generalmente se dividen en las siguientes categorías:
+
+1. **Interrupciones de E/S (Entrada/Salida):** Generadas cuando un dispositivo de E/S necesita interactuar con la CPU o ha terminado una operación.
+2. **Interrupciones de Temporización:** Estas pueden incluir interrupciones generadas por un temporizador, que son usadas para gestionar tiempos de ejecución o realizar tareas de monitoreo.
+3. **Interrupciones de Software:** Generadas por ciertas instrucciones que requieren intervención del sistema operativo, como las llamadas a servicios supervisores (SVC).
+4. **Interrupciones de Error o Fallo de Hardware:** Activadas cuando se detectan fallos, como errores de memoria o fallas en los procesadores.
+
+### Proceso de Manejo de Interrupciones
+El manejo de interrupciones en un mainframe es un proceso ordenado y preciso que asegura que el sistema pueda responder de manera eficiente sin perder datos ni afectar otras operaciones. Este proceso incluye:
+
+1. **Captura de Interrupción:** La CPU detiene el proceso actual y captura la información necesaria para responder a la interrupción.
+2. **Identificación y Priorización:** El sistema identifica el tipo de interrupción y prioriza las interrupciones más críticas (como errores de hardware) sobre las menos urgentes.
+3. **Manejo de la Interrupción:** Se ejecutan rutinas de manejo específicas que solucionan el problema o completan la operación de E/S.
+4. **Retorno al Estado Anterior:** Una vez manejada la interrupción, el sistema devuelve el control al programa que estaba en ejecución antes de la interrupción.
+
+### Importancia del Manejo de Interrupciones en Mainframes
+El manejo de interrupciones es fundamental para la estabilidad y el rendimiento de los sistemas mainframe, ya que permite que el sistema responda a eventos de alta prioridad y mantenga el flujo de procesamiento sin interrupciones mayores.
+
+
+
+
+
+RESTART INTERRUPTS
+
+
+Las *restart interrupts* (interrupciones de reinicio) en IBM mainframe son un tipo específico de interrupción que ocurre cuando un sistema necesita ser reiniciado, generalmente debido a un error de hardware o una condición crítica que requiere un reinicio del sistema para recuperarse. Las interrupciones de reinicio son útiles para preservar el estado y permitir la continuación de los procesos con un impacto mínimo una vez que el sistema se ha recuperado.
+
+### ¿Cómo Funcionan las Restart Interrupts?
+
+En términos generales, cuando una *restart interrupt* ocurre, el sistema operativo captura la información del estado actual del procesador y de los procesos en ejecución. Luego, al reiniciar, el sistema usa esta información para intentar restaurar el estado y reiniciar desde el último punto de procesamiento conocido. La forma en que se maneja este tipo de interrupción puede depender de la gravedad del fallo y de la configuración específica de tolerancia a fallos del sistema.
+
+### Ejemplo de Restart Interrupt en IBM Mainframe
+
+Imaginemos que una aplicación de alto volumen de transacciones está en ejecución en un mainframe IBM, y ocurre un fallo temporal en la CPU que interrumpe el procesamiento de esa aplicación. A continuación se muestra cómo se gestionaría una *restart interrupt* en este escenario:
+
+1. **Detección del Error:** El hardware del mainframe detecta una condición de error en la CPU (por ejemplo, un fallo de microcódigo o una anomalía en el procesador).
+  
+2. **Generación de la Restart Interrupt:** El sistema operativo genera una *restart interrupt* para indicar que la CPU ha experimentado una interrupción que requiere un reinicio seguro.
+
+3. **Guardado del Estado:** Se guarda el estado actual del sistema, incluyendo los registros de la CPU, el estado de la memoria, y los datos de los procesos en ejecución.
+
+4. **Reinicio del Sistema:** El sistema se reinicia automáticamente o mediante un procedimiento de recuperación que resuelve el fallo de hardware.
+
+5. **Recuperación y Continuación:** Una vez resuelto el fallo, el sistema operativo utiliza la información de estado guardada para restaurar la CPU y retomar el procesamiento desde el último punto seguro conocido, permitiendo que la aplicación de transacciones continúe sin una pérdida significativa de datos o procesamiento.
+
+Este tipo de interrupción es crucial en ambientes donde la alta disponibilidad y la continuidad de las transacciones son esenciales, como en sistemas bancarios o de telecomunicaciones. Gracias a las *restart interrupts*, el mainframe puede recuperarse de ciertos tipos de fallos de hardware sin necesidad de reiniciar el sistema por completo y con un mínimo de impacto en los procesos en curso.
+
+
+
+
+
+COMANDOS :
+
+
+DA :   PRE SMF
+
+
+INFORMACION DEL SISTEMA. ES CONFIGURABLE.
+
+
+
+/D SMF
+
+INFORMACION DE LOS MAN.
+
+
+
+/D SMF,O
+
+INFORMACION EN DETALLE
+
+
+
+
+DETALLE DE REGISTROS IMPORTANTES :
+
+SYBSYS(STC,NOTYPE(14:19,62:69,99) -- SYS
+
+
+
+
+En IBM mainframe, el parámetro `SYBSYS(STC,NOTYPE(...))` se usa para especificar configuraciones de filtrado de mensajes en los registros de sistema, especialmente en el *System Log (SYSLOG)*. Este parámetro forma parte de la configuración de la consola y permite a los administradores controlar la visualización y el filtrado de ciertos tipos de mensajes en el registro del sistema para tareas y mensajes de procesos específicos.
+
+### Desglose del Parámetro
+
+- **SYBSYS(STC)**: Aquí, `STC` significa *Started Task Console*, que se refiere a la consola o registro de tareas iniciadas, es decir, aquellas tareas que están corriendo como trabajos de tipo *Started Task* en el sistema. 
+- **NOTYPE(14:19,62:69,99)**: Esta parte del parámetro indica los tipos específicos de mensajes que se desea excluir o filtrar. En este caso:
+  - **14:19**: Excluye los mensajes de tipo 14 a 19.
+  - **62:69**: Excluye los mensajes de tipo 62 a 69.
+  - **99**: Excluye específicamente el tipo de mensaje 99.
+
+### Interpretación de los Números de Tipo
+
+En IBM mainframes, cada tipo de mensaje está representado por un código que se asigna para identificar ciertos eventos o condiciones del sistema. Estos tipos suelen ser números estándar definidos en la configuración de mensajes del sistema, aunque pueden variar ligeramente según el sistema o la configuración específica del mainframe.
+
+- **Tipos de mensaje 14:19**: Generalmente, estos tipos corresponden a mensajes relacionados con eventos de inicio o parada de ciertos servicios o con el estado de las tareas iniciadas.
+- **Tipos de mensaje 62:69**: Estos tipos suelen referirse a eventos de monitoreo de recursos, alertas de desempeño o situaciones relacionadas con la utilización de memoria, CPU o I/O.
+- **Tipo de mensaje 99**: Es un tipo de mensaje específico que generalmente se usa para alertas o notificaciones personalizadas, o eventos que no encajan en las categorías estándar de mensajes.
+
+### Ejemplo de Uso en SYSLOG
+
+Al aplicar esta configuración `SYBSYS(STC,NOTYPE(14:19,62:69,99))`, el sistema:
+
+- Excluirá del SYSLOG cualquier mensaje emitido por tareas iniciadas (*Started Tasks*) que correspondan a los tipos de mensajes 14 a 19, 62 a 69 y 99.
+- Los demás tipos de mensajes seguirán apareciendo en el SYSLOG, permitiendo a los administradores concentrarse solo en los mensajes críticos o relevantes.
+
+Esta configuración es útil para reducir el ruido en el log, optimizando la visibilidad de mensajes importantes y eliminando aquellos considerados no críticos o que generan demasiados datos innecesarios en el contexto operativo del sistema.
+
+
+
+link de info :
+
+
+https://www.ibm.com/docs/es/szs/3.1.0?topic=records-tables-fields-record-types#select_list_fields_smf_field_descs_tables__select_list_fields_smf_rectypes_sup
+
+
+
+*************
+
+
+
+PSW
+
+
+En IBM mainframe, la **PSW** (*Program Status Word* o Palabra de Estado del Programa) es un registro de 128 bits que contiene información crucial sobre el estado de la CPU y el programa en ejecución. La PSW controla el flujo de ejecución del programa, gestionando la secuencia de instrucciones, y también almacena datos sobre el contexto actual de ejecución, incluyendo el estado del sistema y las condiciones de interrupción. La PSW permite que el mainframe realice una conmutación eficiente entre programas y controle el manejo de interrupciones, haciendo posible que el sistema sea altamente estable y eficiente.
+
+### Componentes Clave de la PSW
+
+La PSW contiene varios campos importantes, entre los cuales se incluyen:
+
+1. **Address (Dirección de Instrucción)**: Guarda la dirección de la próxima instrucción que debe ejecutar la CPU, permitiendo que el programa continúe desde el punto en que se quedó.
+2. **Condition Code (Código de Condición)**: Utilizado para almacenar el resultado de ciertas operaciones aritméticas y lógicas. Puede tener valores que indican si el resultado fue positivo, negativo, cero, etc.
+3. **Program Mask (Máscara de Programa)**: Controla la habilitación o deshabilitación de ciertas interrupciones de software.
+4. **Interruption Mask (Máscara de Interrupción)**: Determina qué tipos de interrupciones (entrada/salida, errores de hardware, temporizador, etc.) están permitidos.
+5. **Instruction Address (Dirección de Instrucción)**: Es el puntero que apunta a la siguiente instrucción que se debe ejecutar.
+6. **Flags (Indicadores)**: Incluyen bits de control que pueden habilitar o deshabilitar la ejecución de instrucciones y cambiar el modo de operación de la CPU (modo usuario o modo supervisor, por ejemplo).
+
+### Ejemplo de Uso de la PSW en un Contexto de Interrupción
+
+Cuando ocurre una interrupción en un mainframe IBM (por ejemplo, una solicitud de I/O o una falla de hardware), la CPU:
+
+1. **Guarda el PSW actual** en una ubicación de almacenamiento especial. Esto permite que el sistema sepa en qué punto estaba el programa antes de la interrupción.
+2. **Carga un PSW de interrupción** adecuado para el tipo de evento ocurrido. Este PSW especial redirige el control de la CPU hacia una rutina de manejo de interrupciones.
+3. **Procesa la Interrupción** según lo especificado.
+4. **Restaura el PSW original** al final de la rutina de interrupción, permitiendo que el programa continúe ejecutándose desde donde fue interrumpido.
+
+### Importancia de la PSW en IBM Mainframe
+
+La PSW es fundamental para el manejo de la multitarea, la recuperación de fallos y la administración de interrupciones. Permite a la CPU cambiar de contexto entre programas y manejar eventos críticos sin perder el estado de ejecución de las tareas en curso, proporcionando una estructura robusta y precisa para el control de procesos en el mainframe.
+
+
+
+
+**************
+
+
+
+SVC  
+
+
+
+En IBM mainframe, **SVC** (*Supervisor Call*) es una instrucción especial que permite a los programas de usuario solicitar servicios del sistema operativo. Cuando se ejecuta una instrucción SVC, el control se transfiere al sistema operativo en modo supervisor, lo que permite al programa de usuario realizar tareas de bajo nivel, como manipular archivos, gestionar memoria o acceder a dispositivos de entrada/salida, de forma segura y controlada.
+
+### ¿Cómo Funciona un SVC?
+
+Cuando un programa ejecuta una instrucción SVC, la CPU genera una interrupción de tipo SVC, cambiando al modo supervisor y transfiriendo el control a una rutina de servicio del sistema. Cada instrucción SVC se asocia con un número (código SVC) que indica el servicio específico que se necesita. El sistema operativo entonces:
+
+1. Identifica el código SVC para determinar qué rutina de servicio debe ejecutarse.
+2. Ejecuta la rutina correspondiente en nombre del programa.
+3. Restaura el contexto del programa y regresa el control al programa en modo usuario una vez que se completa el servicio.
+
+### Tipos Comunes de Servicios SVC
+
+Algunos ejemplos de servicios SVC comunes en sistemas z/OS incluyen:
+
+- **SVC 8**: Solicita servicios para manipular archivos o datasets.
+- **SVC 20**: Administra la obtención y liberación de almacenamiento (memoria).
+- **SVC 99**: Abre un dataset dinámicamente, comúnmente utilizado en el manejo de archivos.
+
+### Ejemplo de Uso de un SVC
+
+Imaginemos un programa que necesita abrir un archivo para escribir información de salida. El programa puede llamar al SVC 99 para que el sistema operativo realice la apertura del archivo. Este proceso generalmente se realiza de la siguiente manera:
+
+1. **Preparación de los Parámetros**: El programa prepara los parámetros necesarios, como el nombre del archivo, el modo de acceso (lectura/escritura) y otras características del archivo.
+2. **Ejecuta la Instrucción SVC 99**: El programa ejecuta la instrucción `SVC 99`.
+3. **Transferencia al Sistema Operativo**: La instrucción SVC provoca una interrupción, y el sistema operativo toma el control en modo supervisor.
+4. **Ejecución del Servicio**: El sistema operativo ejecuta la rutina que abre el archivo en modo seguro y proporciona un manejador de archivo al programa.
+5. **Retorno al Programa**: Una vez completado el servicio, el control se devuelve al programa de usuario, que ahora puede escribir en el archivo utilizando el manejador proporcionado.
+
+### Importancia de los SVC en Mainframes
+
+Los SVC son fundamentales en mainframes IBM porque permiten la separación de funciones críticas y de bajo nivel del sistema operativo de las aplicaciones de usuario. Esto garantiza que los programas puedan acceder a los recursos del sistema de manera segura y controlada, previniendo accesos no autorizados y manteniendo la integridad y estabilidad del sistema. Los SVC también son esenciales para la eficiencia y confiabilidad, ya que permiten que los servicios del sistema sean utilizados de manera estandarizada y protegida.
+
+
+
+
+
+La tabla de SVCs (Supervisor Call) en IBM Mainframe contiene números y funciones específicos de estas llamadas al sistema, las cuales facilitan tareas como el manejo de memoria, operaciones de entrada/salida, control de recursos, entre otras. Puedes acceder a esta tabla y los detalles de cada SVC en el sitio de IBM, donde se describe su funcionalidad y el tipo de llamada asociada.
+
+Para revisar la tabla completa y obtener información adicional sobre cómo interpretar cada SVC, puedes consultar la guía proporcionada por IBM en su sitio web . Otra opción para ver información de las SVCs en un entorno CICS es utilizar comandos en IPCS, como `VERBX NUCMAP` y `FIND SVCTABLE`, los cuales te ayudan a identificar los puntos de entrada de las SVCs en un volcado del sistema.
+
+
+LINK TABLA DE SVC
+
+https://www.ibm.com/docs/en/zos/2.1.0?topic=table-svcs-associated-macros
+
+
+
+COMANDO
+
+PRE CATALOG
+
+
+
+
+
+*****************
+
+
+UNIX EN Z
+
+
+COMANDO :
+
+TSO ISHELL
+
+
+
+
+
+COMANDO :
+
+TSO OMVS
+
+
+SALIDA : F2 Y COMANDO : QUIT
+
+
+
+
+**************
+
+
+
+WRL
+
+
+
+El *WRL environment* en el mainframe IBM se refiere generalmente a la *Workload Manager Resource Level* (WRL), un concepto gestionado por el *Workload Manager* (WLM). WLM es una herramienta que permite asignar y priorizar recursos del sistema, como CPU y memoria, a diferentes tipos de trabajos o aplicaciones según las necesidades de rendimiento y las políticas definidas por el administrador. Esta gestión optimiza la utilización de los recursos y ayuda a evitar conflictos entre trabajos que podrían competir por los mismos recursos.
+
+En un entorno WRL, el WLM evalúa la carga de trabajo y ajusta dinámicamente los recursos de cada trabajo en función de su importancia relativa y de los objetivos de servicio (por ejemplo, tiempos de respuesta específicos). También permite una administración eficiente en sistemas de gran tamaño que consolidan múltiples cargas de trabajo, asegurando que cada aplicación o usuario reciba los recursos necesarios sin interferencias significativas de otros trabajos que puedan estar en ejecución.
+
+Para obtener más detalles, puedes consultar la documentación de WLM en IBM .
+
+
+https://www.ibm.com/docs/en/zos-basic-skills?topic=sysplex-workload-manager-wlm
+
+
+
+COMANDO :   M.5
+
+12   WLM
+
+
+
+
+*************
+
+
+
+ RMF - Performance Management
+
+
+
+El *Resource Measurement Facility* (RMF) en IBM z/OS es una herramienta integral de monitoreo de rendimiento diseñada para analizar y gestionar el uso de recursos en entornos mainframe. RMF permite a los administradores obtener datos detallados sobre el desempeño del sistema y tomar decisiones informadas para optimizar recursos.
+
+RMF opera principalmente a través de tres monitores:
+
+1. **Monitor I**: Realiza una recolección de datos a largo plazo sobre el uso de recursos del sistema, como CPU, dispositivos de almacenamiento y memoria.
+
+2. **Monitor II**: Ofrece "instantáneas" del rendimiento en tiempo real, enfocándose en recursos específicos, como un espacio de dirección individual o volumen de DASD (Direct Access Storage Device). Es útil para identificar problemas de rendimiento a nivel de tarea o volumen.
+
+3. **Monitor III**: Proporciona datos de corto plazo, en ciclos de segundos, para diagnosticar rápidamente cuellos de botella en la carga de trabajo. Este monitor se utiliza para analizar demoras en el sistema, como espera de CPU o I/O.
+
+Además de los monitores, RMF incluye un *Post-processor* que permite generar reportes a partir de datos históricos de SMF (System Management Facility). Por ejemplo, RMF puede mostrar demoras en trabajos de impresión o procesamiento de datos, permitiendo a los administradores detectar si hay conflictos entre trabajos de diferentes prioridades, optimizando así el rendimiento del sistema al ajustar la asignación de recursos según la demanda y prioridad.
+
+Para una implementación visual, RMF se integra con herramientas como Grafana, permitiendo gráficos en tiempo real de métricas del sistema desde un entorno gráfico accesible en navegadores. La *RMF Spreadsheet Reporter* es otra herramienta asociada, que convierte los datos de RMF en hojas de cálculo para un análisis detallado.
+
+Si deseas profundizar en el uso de RMF para análisis de rendimiento en IBM z, puedes revisar la documentación de RMF en el sitio oficial de IBM o en la  para ver ejemplos de reportes y configuraciones detalladas.
+
+
+
+
+
+**************
+
+
+
+IOCP
+
+
+
+En el entorno de IBM z/OS, **IOCP** (I/O Configuration Program) es una herramienta que permite definir y configurar los recursos de entrada/salida (I/O) en el sistema principal. Su propósito principal es crear una definición coherente de las conexiones entre los dispositivos de E/S y los controladores en el entorno de mainframe, de manera que el sistema pueda reconocer y gestionar estos dispositivos correctamente.
+
+### ¿Qué hace IOCP?
+
+- **Definición de Hardware**: Permite a los administradores del sistema definir las conexiones entre el hardware físico (como controladores, canales y dispositivos de E/S) y el sistema operativo.
+
+- **Configuración de Dispositivos**: Asegura que todos los dispositivos de E/S estén configurados correctamente para que el sistema los pueda utilizar, asignándoles el canal adecuado, las direcciones de memoria, y otras características del hardware.
+
+- **Creación de un archivo de configuración**: El archivo resultante generado por IOCP es utilizado por el sistema para configurar y administrar el acceso a dispositivos.
+
+
+### Ejemplo de uso de IOCP:
+
+El proceso de configurar dispositivos utilizando IOCP puede incluir los siguientes pasos:
+
+1. **Generar un archivo de configuración IOCP**:
+
+   El administrador de sistemas usa IOCP para generar un archivo que describa los dispositivos y canales. Por ejemplo, una configuración podría incluir una línea para un canal de entrada/salida, asignado a un dispositivo de almacenamiento específico, y una dirección de canal asignada a ese dispositivo.
+
+2. **Ejemplo básico de entrada en un archivo IOCP**:
+   ``` 
+   DEVICE  3480  CHANNEL  1  PATH  01
+   DEVICE  3490  CHANNEL  2  PATH  02
+   ```
+   En este ejemplo, el sistema está configurando dos dispositivos de almacenamiento (3480 y 3490), asignados a los canales 1 y 2, respectivamente.
+
+
+3. **Verificación de Configuración**:
+
+   Una vez generado el archivo de configuración, los administradores pueden usar el archivo para cargar la configuración en el sistema z/OS. Esto permite que el sistema reconozca y pueda acceder a los dispositivos de acuerdo con la definición.
+
+4. **Generación de la configuración de dispositivos**:
+
+   El archivo IOCP se utiliza como entrada para la configuración de dispositivos y se procesa durante el inicio del sistema. Esto configura los canales y dispositivos correctamente, de modo que se pueda realizar el procesamiento de E/S sin problemas.
+
+En resumen, IOCP es crucial para la configuración y gestión de dispositivos en un entorno IBM mainframe, especialmente cuando se trata de configurar correctamente los canales de entrada/salida y los dispositivos que estarán involucrados en la operación del sistema.
+
+
+
+
+********************
+
+
+CLASE 14/11
+
+
+PRACTICAS USO DEL TSO ISHELL
+
+
+
+
+El **editor BI** se refiere al **Editor Browse-Interpret** (BI Editor), una herramienta que permite ver y modificar datos en sistemas mainframe, especialmente para trabajar con grandes volúmenes de información en datasets y bases de datos.
+
+Algunas características del editor BI son:
+
+1. **Exploración y edición**: Permite ver y editar datos en modo de solo lectura (browse) o en modo de edición (edit) en diferentes formatos.
+2. **Interpretación de datos**: Puede interpretar y presentar datos en formatos específicos (por ejemplo, hexadecimal), facilitando la comprensión y manipulación de la información binaria.
+3. **Resaltado y búsqueda de patrones**: Incluye funciones avanzadas para buscar y resaltar patrones específicos en los datos, lo cual es útil en análisis de datos complejos.
+
+Este editor es común en entornos como **IBM z/OS** y es utilizado principalmente por programadores y administradores de sistemas para la manipulación directa de datos en entornos empresariales de alto rendimiento.
+
+
+
+El acceso al **editor BI** puede variar según la configuración del sistema mainframe y las herramientas específicas de tu entorno, pero generalmente se realiza mediante un proceso similar al siguiente:
+
+### Pasos para acceder al Editor BI en un sistema mainframe:
+
+1. **Inicia sesión en el sistema mainframe**:
+   - Usa tu terminal 3270 o un emulador de terminal para conectarte al sistema mainframe.
+   - Ingresa tu nombre de usuario y contraseña.
+
+2. **Accede al entorno TSO/ISPF**:
+   - Una vez en el sistema, selecciona la opción para entrar al entorno **TSO/ISPF**. Esto suele ser una opción en el menú principal después de iniciar sesión.
+
+3. **Navega al panel de edición**:
+   - Desde el menú principal de ISPF, selecciona la opción de **Browse** o **Edit** para abrir un dataset en modo de exploración o edición. Esto usualmente es la opción **3.4** en el menú de ISPF para ver y seleccionar datasets.
+
+4. **Selecciona el dataset que deseas editar**:
+   - Ingresa el nombre del dataset que quieres abrir o usa filtros para encontrarlo en el panel **Dataset List Utility** (Opción 3.4).
+   - Una vez encontrado, selecciona el dataset deseado para abrirlo en modo **Browse** o **Edit**.
+
+5. **Activa el modo hexadecimal (opcional)**:
+   - Si deseas ver o modificar el contenido en formato hexadecimal, puedes habilitar la visualización hexadecimal en el dataset, generalmente usando el comando `HEX ON` dentro del editor. Esto es útil si estás manipulando datos binarios o no legibles en texto.
+
+6. **Realiza tus ediciones o inspecciones en BI**:
+   - En el modo de edición o exploración, puedes buscar patrones específicos, modificar campos, y navegar por el contenido del dataset de acuerdo a las opciones y comandos disponibles en el editor BI.
+
+7. **Guarda los cambios (si estás en modo Edit)**:
+   - Si realizaste ediciones y deseas guardar los cambios, usa el comando `SAVE` para asegurarlos.
+   - Para salir, usa el comando `END` o `EXIT`.
+
+> **Nota**: Algunos sistemas o entornos personalizados pueden tener otros pasos o herramientas adicionales para acceder al BI o para activar sus funcionalidades. También es importante verificar los permisos, ya que algunos datasets pueden ser de solo lectura.
+
+
+
+*******************
+
+
+LA PLACA DE COMPRESION
+
+
+
+***************
+
+
+
+
+EDITOR VI DE UNIX EN MAINFRAME
+
+
+El editor **VI** no es nativo de los sistemas mainframe tradicionales como **z/OS**. Sin embargo, si el mainframe está configurado con una distribución de **UNIX System Services (USS)**, puedes usar VI en la shell de UNIX del mainframe para editar archivos de texto. Aquí te explico cómo acceder a VI en un entorno USS:
+
+### Pasos para acceder a VI en un mainframe con UNIX System Services
+
+1. **Inicia sesión en el mainframe**:
+   - Usa tu terminal 3270 o un emulador compatible para conectarte al sistema mainframe.
+   - Ingresa tu nombre de usuario y contraseña.
+
+2. **Accede al entorno TSO/ISPF**:
+   - Desde el menú principal de ISPF, selecciona la opción de entrar al **TSO Command Shell**.
+
+3. **Accede a la shell de UNIX (USS)**:
+   - Desde el TSO Command Shell, ingresa el comando `tso omvs` para acceder al entorno de UNIX System Services.
+   - También puedes ingresar directamente a OMVS desde ISPF si existe esa opción en el menú principal.
+
+4. **Navega a la ubicación del archivo**:
+   - Usa comandos UNIX como `cd` para cambiar al directorio donde se encuentra el archivo que deseas editar.
+   - Puedes verificar el contenido de un directorio con el comando `ls`.
+
+5. **Abre el archivo con VI**:
+   - Escribe el comando `vi` seguido del nombre del archivo que deseas editar. Por ejemplo:
+     ```bash
+     vi nombre_archivo.txt
+     ```
+   - Si el archivo no existe, VI lo creará una vez que guardes los cambios.
+
+6. **Usa VI para editar el archivo**:
+   - Ahora estás en el editor VI. Desde aquí, puedes utilizar los comandos de VI estándar para editar el archivo, como cambiar entre los modos de comando e inserción, guardar, y salir.
+
+7. **Guardar y salir de VI**:
+   - Para guardar los cambios, escribe `:w` y presiona Enter.
+   - Para guardar y salir, escribe `:wq` o `:x` y presiona Enter.
+   - Si deseas salir sin guardar, escribe `:q!` y presiona Enter.
+
+8. **Salir del entorno USS**:
+   - Para salir del entorno de UNIX en el mainframe, escribe `exit` para regresar al TSO/ISPF.
+
+### Nota
+La funcionalidad de VI en un mainframe está disponible solo si el entorno de UNIX System Services está habilitado. En caso de no tener acceso a USS, puedes utilizar editores nativos del mainframe, como **ISPF Edit**.
+
+
+*************
+
+
+UNIT=VIO
+
+
+
+El parámetro `UNIT=VIO` en un mainframe se utiliza en **JCL (Job Control Language)** para asignar un archivo temporal en el almacenamiento de memoria virtual en lugar de un disco físico. VIO significa **Virtual Input/Output**, y permite al sistema almacenar datasets en memoria de acceso rápido (RAM) durante la ejecución de un trabajo. Esta opción es útil para mejorar el rendimiento de archivos temporales y reducir el tiempo de acceso, ya que evita la lectura y escritura en el disco físico.
+
+### ¿Cuándo usar `UNIT=VIO`?
+
+Se utiliza principalmente para:
+- **Archivos temporales** que solo se necesitan durante la ejecución del trabajo y que no requieren almacenamiento persistente.
+- **Optimizar el rendimiento** al almacenar en memoria archivos que necesitan rápido acceso.
+- **Reducir la carga de I/O en dispositivos de disco físico**, especialmente útil en procesos intensivos en datos.
+
+### Cómo funciona `UNIT=VIO`
+
+Cuando se especifica `UNIT=VIO`:
+- El sistema reserva espacio en la memoria virtual para el dataset.
+- Al finalizar el trabajo, el dataset en `UNIT=VIO` se elimina automáticamente, ya que solo se utiliza temporalmente.
+
+> **Nota**: El uso de `UNIT=VIO` está sujeto a las políticas del sistema y la cantidad de memoria disponible. Algunos sistemas mainframe pueden tener configuraciones que limitan o administran el uso de `UNIT=VIO`.
+
+### Ejemplo de uso de `UNIT=VIO` en JCL
+
+Supongamos que deseas crear un archivo temporal para almacenar datos que solo necesitas durante la ejecución del trabajo y deseas optimizar el acceso a estos datos.
+
+```JCL
+//TEMPFILE DD  DSN=&&TEMPDS,           
+//             DISP=(NEW,PASS),
+//             UNIT=VIO,               
+//             SPACE=(CYL,(1,1)),      
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+```
+
+#### Explicación de los parámetros
+
+- `DSN=&&TEMPDS`: Define un dataset temporal, `&&TEMPDS`, que solo existirá durante la ejecución del trabajo.
+- `DISP=(NEW,PASS)`: Indica que el dataset es nuevo y será pasado a los pasos siguientes del trabajo (si los hay).
+- `UNIT=VIO`: Especifica que el dataset se almacenará en memoria virtual (RAM) en lugar de un disco físico.
+- `SPACE=(CYL,(1,1))`: Define la cantidad de espacio que se asignará al dataset (1 cilindro inicial y 1 adicional si es necesario).
+- `DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)`: Especifica las características del archivo, como el formato de registro (FB - registros fijos), longitud de registro (`LRECL=80`) y tamaño de bloque (`BLKSIZE=800`).
+
+### Ventajas y limitaciones de `UNIT=VIO`
+
+**Ventajas:**
+- Mejora el rendimiento para archivos temporales al evitar operaciones de I/O en el disco físico.
+- Facilita el uso de archivos que solo se necesitan durante la ejecución del trabajo y no requieren almacenamiento permanente.
+
+**Limitaciones:**
+- La memoria es un recurso limitado; un uso excesivo de `UNIT=VIO` puede afectar el rendimiento de otros procesos.
+- Los datasets `UNIT=VIO` se eliminan automáticamente al finalizar el trabajo, por lo que no pueden usarse para almacenamiento persistente.
+
+`UNIT=VIO` es ideal para trabajos que requieren archivos temporales rápidos y no persistentes, permitiendo aprovechar la memoria para reducir la carga en el almacenamiento en disco.
+
+
+
+
+***************
+
+
+USO DEL SMS
+
+
+En los sistemas mainframe, **SMS (Storage Management Subsystem)** es un sistema de gestión de almacenamiento utilizado para automatizar y optimizar el manejo de datasets (archivos) y sus recursos de almacenamiento en el entorno **z/OS**. SMS permite definir políticas de almacenamiento que el sistema aplica automáticamente a los datasets, lo cual facilita la administración de almacenamiento sin intervención manual. SMS se encarga de asignar volúmenes, clases de almacenamiento y otras características de los datasets, reduciendo así la carga de trabajo de los administradores y optimizando el uso de los recursos.
+
+### Principales Componentes de SMS
+
+SMS en z/OS utiliza varios componentes para gestionar de manera eficiente los recursos de almacenamiento. Entre los más importantes están:
+
+1. **Clases de almacenamiento (Storage Classes)**:
+   - Determinan el nivel de disponibilidad y rendimiento que se espera del almacenamiento asignado a un dataset. Por ejemplo, algunos datasets pueden requerir almacenamiento de alto rendimiento (como discos rápidos), mientras que otros pueden ir a discos de menor costo.
+
+2. **Clases de administración (Management Classes)**:
+   - Definen reglas de ciclo de vida para los datasets, como retención, backup y migración. Esto ayuda a automatizar la retención y migración de datos a sistemas de almacenamiento secundario o de archivo.
+
+3. **Clases de datos (Data Classes)**:
+   - Especifican características de los datasets, como el formato de registro (RECFM), tamaño de bloque (BLKSIZE), y otros parámetros técnicos necesarios para la creación y uso de los archivos.
+
+4. **Grupos de almacenamiento (Storage Groups)**:
+   - Son conjuntos de volúmenes físicos en los cuales SMS almacena datasets. Los Storage Groups permiten agrupar discos según su rendimiento o características, permitiendo una asignación óptima según las políticas definidas.
+
+### Usos de SMS
+
+- **Automatización de la asignación de almacenamiento**: SMS permite que el sistema gestione automáticamente en qué disco o volumen se almacenarán los datasets, sin que el usuario o el programador tengan que especificar el volumen manualmente.
+  
+- **Optimización de recursos de almacenamiento**: Gracias a SMS, se pueden configurar políticas que migran datasets inactivos a almacenamiento de bajo costo, liberando espacio en discos de alto rendimiento para datos más críticos.
+
+- **Cumplimiento de políticas de retención**: Mediante las clases de administración, SMS permite cumplir con los requisitos de retención y eliminación de datos, gestionando automáticamente el ciclo de vida de los archivos.
+
+- **Simplificación del JCL**: SMS reduce la necesidad de especificar detalles técnicos en el JCL (Job Control Language), ya que muchas de las características de los datasets pueden definirse mediante clases de SMS.
+
+### Ejemplo de Uso de SMS en JCL
+
+Con SMS, un dataset en JCL puede definirse sin especificar el volumen físico. Aquí tienes un ejemplo de cómo se usa SMS en JCL:
+
+```JCL
+//MYDATA   DD  DSN=MY.DATASET.NAME,       
+//             DISP=(NEW,CATLG,DELETE),    
+//             SPACE=(CYL,(5,5)),          
+//             STORCLAS=HIGH_PERF,         
+//             MGMTCLAS=RETAIN_90D,        
+//             DATACLAS=STANDARD
+```
+
+#### Explicación de los parámetros
+
+- `DSN=MY.DATASET.NAME`: Define el nombre del dataset.
+- `DISP=(NEW,CATLG,DELETE)`: Indica que el dataset se creará como nuevo, se catalogará si el trabajo termina normalmente y se eliminará si falla.
+- `SPACE=(CYL,(5,5))`: Asigna espacio en cilindros para el dataset, con 5 cilindros iniciales y 5 adicionales si es necesario.
+- `STORCLAS=HIGH_PERF`: Especifica la clase de almacenamiento. En este ejemplo, `HIGH_PERF` puede ser una clase que asigne el dataset a un disco de alto rendimiento.
+- `MGMTCLAS=RETAIN_90D`: Define la clase de administración, que en este ejemplo podría retener el dataset por 90 días antes de migrarlo o archivarlo.
+- `DATACLAS=STANDARD`: Especifica la clase de datos, que puede establecer valores por defecto para el tipo de registro, longitud y tamaño de bloque.
+
+### Ventajas de Usar SMS
+
+- **Automatización**: Reduce la necesidad de intervención manual, ahorrando tiempo y minimizando errores.
+- **Escalabilidad**: Permite al sistema asignar datasets de manera eficiente incluso en entornos con grandes volúmenes de datos.
+- **Cumplimiento de políticas**: Facilita el cumplimiento de políticas corporativas de retención de datos y gestión del ciclo de vida.
+- **Optimización del rendimiento**: SMS optimiza el almacenamiento asignando datasets críticos a dispositivos de alto rendimiento.
+
+### Conclusión
+
+SMS en mainframe es fundamental para gestionar el almacenamiento de manera automatizada y eficiente en entornos z/OS. Con SMS, los administradores pueden definir políticas de almacenamiento que el sistema aplicará automáticamente, mejorando el rendimiento, cumplimiento y optimización de los recursos de almacenamiento.
+
+
+
+****************
+
+
+DATA CLASS
+
+
+
+En el sistema mainframe **z/OS**, una **Data Class (Clase de Datos)** es un conjunto de atributos que se puede aplicar a un dataset para definir sus características técnicas, como el tipo de registro, la longitud de registro, el tamaño del bloque, el tamaño del espacio, y más. Las Data Classes son parte de **SMS (Storage Management Subsystem)** y permiten que los administradores definan parámetros específicos que luego se aplican automáticamente a los datasets sin que los usuarios o programadores necesiten especificarlos en cada JCL.
+
+### Principales Atributos de una Data Class
+
+Algunos de los atributos clave que se pueden definir en una Data Class son:
+
+1. **Formato de registro (Record Format - RECFM)**:
+   - Define el formato del registro, como `F` (Fixed), `FB` (Fixed Blocked), `V` (Variable), o `VB` (Variable Blocked).
+
+2. **Longitud del registro (Record Length - LRECL)**:
+   - Define el tamaño de cada registro en el dataset. Si el formato es fijo (`F`), todos los registros tendrán esta longitud.
+
+3. **Tamaño de bloque (Block Size - BLKSIZE)**:
+   - Define el tamaño de cada bloque de datos, lo que afecta el rendimiento de la entrada/salida (I/O).
+
+4. **Espacio (SPACE)**:
+   - Especifica el espacio de almacenamiento asignado al dataset. Puede definirse en términos de cilindros, pistas, o bloques.
+
+5. **Tipo de dataset (Data Set Organization - DSORG)**:
+   - Define la organización del dataset, como secuencial (`PS`) o particionado (`PO`).
+
+6. **Compresión**:
+   - La Data Class puede especificar si los datos en el dataset deben ser comprimidos para ahorrar espacio en el disco.
+
+### ¿Por qué usar una Data Class?
+
+Utilizar Data Classes facilita y estandariza la creación de datasets en el sistema, evitando que cada usuario o programador deba recordar y especificar detalles técnicos para cada archivo. Las Data Classes también aseguran que los datasets tengan configuraciones óptimas para su uso, rendimiento y almacenamiento.
+
+### Ejemplo de Uso de Data Class en JCL
+
+Aquí hay un ejemplo de cómo se aplica una Data Class en un JCL:
+
+```JCL
+//MIARCHIV DD  DSN=MY.DATASET.NAME,         
+//             DISP=(NEW,CATLG,DELETE),     
+//             DATACLAS=STANDARD
+```
+
+#### Explicación de los parámetros
+
+- `DSN=MY.DATASET.NAME`: Define el nombre del dataset.
+- `DISP=(NEW,CATLG,DELETE)`: Indica que el dataset será nuevo, se catalogará al finalizar el trabajo y se eliminará si falla.
+- `DATACLAS=STANDARD`: Especifica la Data Class `STANDARD`, la cual contiene los atributos predefinidos para el dataset, como el tipo de registro, tamaño de bloque, longitud de registro, etc.
+
+### Ejemplo de una Definición de Data Class
+
+La definición de una Data Class en el sistema (configurada por un administrador de SMS) puede tener atributos como:
+
+- **Nombre de la Data Class**: `STANDARD`
+- **RECFM**: `FB` (Fixed Blocked)
+- **LRECL**: `80`
+- **BLKSIZE**: `800`
+- **DSORG**: `PS` (Dataset secuencial)
+- **Compresión**: `Sí` o `No`
+
+### Ventajas de las Data Classes
+
+- **Consistencia**: Garantizan configuraciones uniformes en los datasets, lo que facilita el cumplimiento de estándares organizacionales.
+- **Ahorro de tiempo**: Evitan que los usuarios tengan que definir cada parámetro manualmente, simplificando el JCL.
+- **Optimización del rendimiento**: Permiten definir configuraciones técnicas que optimizan la eficiencia del almacenamiento y el I/O.
+- **Facilita la administración**: Centraliza la configuración de parámetros técnicos, lo que es útil en entornos de alta escala.
+
+En resumen, las Data Classes son una herramienta poderosa en SMS para estandarizar y simplificar la creación y administración de datasets en un mainframe z/OS.
+
+
+
+******************
+
+
+ACS ROUTINE
+
+
+En el entorno mainframe z/OS, una **ACS Routine (Automatic Class Selection Routine)** es un conjunto de instrucciones o scripts en **SMS (Storage Management Subsystem)** que automatiza la selección de clases y grupos de almacenamiento para los datasets. Las rutinas ACS determinan de manera dinámica los atributos de clase (Data Class, Storage Class, Management Class) y el Storage Group (grupo de almacenamiento) que deben asignarse a un dataset en función de ciertos criterios, como el nombre del dataset, el usuario que lo solicita, o el tipo de datos.
+
+### Tipos de ACS Routines
+
+Existen cuatro tipos de rutinas ACS, cada una asignada a un atributo específico de SMS:
+
+1. **Data Class Routine (DC)**:
+
+   - Determina la **Data Class** de un dataset, que define parámetros como el tamaño del bloque, el formato del registro, la longitud del registro y la compresión.
+
+2. **Storage Class Routine (SC)**:
+
+   - Determina la **Storage Class** que define el nivel de rendimiento y disponibilidad necesarios para el almacenamiento de un dataset.
+
+3. **Management Class Routine (MC)**:
+
+   - Determina la **Management Class**, que controla las políticas de ciclo de vida, incluyendo retención, backup y migración de datasets.
+
+4. **Storage Group Routine (SG)**:
+
+   - Determina el **Storage Group** o grupo de almacenamiento físico donde se almacenará el dataset. Un Storage Group puede incluir varios volúmenes físicos o discos.
+
+
+### Cómo funcionan las ACS Routines
+
+Cada vez que se crea o actualiza un dataset, SMS ejecuta las ACS Routines para asignarle las clases y grupos de almacenamiento apropiados. Las rutinas ACS están escritas en un lenguaje de scripting específico de SMS que permite utilizar condiciones y lógicas de decisión basadas en los atributos del dataset o el entorno de creación. Las decisiones que toman las rutinas ACS dependen de criterios predefinidos, como:
+
+- Nombre del dataset
+- Usuario o grupo de usuario (OWNER)
+- Volumen solicitado
+- Propósito del dataset (desarrollo, producción, archivo, etc.)
+- Tamaño y tipo del dataset
+
+### Ejemplo de ACS Routine
+
+Aquí tienes un ejemplo básico de una **Data Class Routine** en lenguaje ACS:
+
+```plaintext
+IF &DSN = 'PROD.DATASET.*' THEN
+    SET &DATACLAS = 'HIGH_PERF'
+ELSE IF &DSN = 'TEST.DATASET.*' THEN
+    SET &DATACLAS = 'STANDARD'
+ELSE
+    SET &DATACLAS = 'DEFAULT'
+```
+
+#### Explicación del Ejemplo
+
+- `&DSN` es una variable que representa el nombre del dataset.
+- La rutina ACS verifica el nombre del dataset:
+  - Si el dataset pertenece a la producción (`PROD.DATASET.*`), se le asigna la clase de datos `HIGH_PERF`.
+  - Si el dataset pertenece a pruebas (`TEST.DATASET.*`), se le asigna la clase `STANDARD`.
+  - Para cualquier otro nombre de dataset, se le asigna la clase de datos `DEFAULT`.
+
+### Ventajas del Uso de ACS Routines
+
+- **Automatización**: Permite asignar clases y grupos de almacenamiento automáticamente según criterios predefinidos.
+- **Consistencia**: Asegura que todos los datasets que cumplen con ciertos criterios reciban configuraciones uniformes.
+- **Flexibilidad**: Las rutinas ACS pueden adaptarse a diferentes entornos (desarrollo, producción, pruebas) y requisitos específicos de la organización.
+- **Optimización de almacenamiento**: Asigna datasets a los volúmenes de almacenamiento más adecuados, optimizando así el uso de recursos y el rendimiento.
+
+### Ejemplo Completo de JCL que Usa ACS
+
+Con ACS activado, un JCL puede ser tan simple como el siguiente, ya que SMS y las rutinas ACS se encargarán de asignar los atributos automáticamente:
+
+```JCL
+//MIJOB    JOB  'EJEMPLO ACS',CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+//STEP1    EXEC PGM=IEFBR14
+//MIARCHIV DD  DSN=PROD.DATASET.EXAMPLE,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(CYL,(10,5))
+```
+
+En este caso:
+
+- La ACS Routine seleccionará automáticamente la `Data Class`, `Storage Class`, `Management Class` y `Storage Group` para `PROD.DATASET.EXAMPLE` en función de las políticas definidas en las rutinas.
+
+
+### Conclusión
+
+Las ACS Routines son esenciales en SMS para gestionar de forma automatizada y eficiente la asignación de recursos de almacenamiento en z/OS. Ayudan a reducir errores, aseguran consistencia y permiten la optimización de recursos al definir políticas flexibles que se aplican a los datasets en función de sus atributos o el entorno en el que se utilizan.
+
+
+
+***********************
+
+
+
+
+
+### ¿Qué es **zFS** (z/OS File System)?
+
+
+**zFS** (z/OS File System) es un sistema de archivos de alto rendimiento y basado en **Unix** que se utiliza en el sistema operativo **z/OS** para gestionar y almacenar datos. Está diseñado para proporcionar un entorno de archivos flexible y escalable, con características avanzadas de seguridad, alta disponibilidad y rendimiento en plataformas mainframe.
+
+zFS es una implementación de un sistema de archivos tipo **hierarchical file system (HFS)**, pero con muchas mejoras para adaptarse a las necesidades específicas de los entornos mainframe. Aunque zFS está basado en conceptos de sistemas de archivos Unix, es totalmente compatible con las características de z/OS, como la integración con la seguridad RACF, la alta disponibilidad y el acceso rápido a los datos.
+
+
+### Características Clave de **zFS**
+
+
+1. **Basado en Unix**:
+   - zFS es un sistema de archivos que permite a los usuarios y aplicaciones trabajar con archivos y directorios de manera similar a como lo hacen en entornos Unix/Linux. Utiliza una estructura de directorios jerárquica y es compatible con la notación de rutas típica de Unix.
+
+
+2. **Integración con z/OS**:
+   - Aunque es un sistema de archivos tipo Unix, zFS está diseñado para integrarse perfectamente con las capacidades de **z/OS**, como la gestión de almacenamiento, seguridad RACF, y otras características del mainframe.
+
+
+3. **Escalabilidad y Rendimiento**:
+   - zFS es capaz de manejar grandes volúmenes de datos con un rendimiento optimizado. Es ideal para entornos de alta carga y para grandes aplicaciones empresariales que requieren un sistema de archivos robusto.
+
+
+4. **Soporte para grandes archivos**:
+   - Permite almacenar archivos grandes (archivos de más de 2 GB, que otros sistemas de archivos tradicionales no pueden manejar sin configuraciones especiales).
+
+
+5. **Alta disponibilidad y fiabilidad**:
+   - Al ser una solución nativa de z/OS, zFS aprovecha las capacidades de alta disponibilidad del mainframe, como **parallel sysplex** y **RAID**.
+
+
+6. **Compatibilidad con otros sistemas de archivos**:
+
+   - zFS es compatible con otros sistemas de archivos de z/OS, como el **VSAM** y el **HFS (z/OS Hierarchical File System)**. También se puede montar y acceder a otros sistemas de archivos distribuidos, como **NFS**.
+
+
+
+7. **Seguridad avanzada**:
+
+   - zFS se integra con **RACF (Resource Access Control Facility)** para proporcionar un control de acceso detallado y seguro. Los usuarios pueden asignar permisos sobre archivos y directorios a nivel granular.
+
+
+### Estructura de zFS
+
+La estructura de un sistema de archivos zFS se organiza en una jerarquía de directorios. Los directorios pueden contener archivos y otros directorios, y las rutas de acceso se especifican de forma similar a como se hace en sistemas Unix/Linux:
+
+- **Directorio raíz (`/`)**: El punto de inicio de la jerarquía de archivos. Todos los demás archivos y directorios son accesibles desde aquí.
+- **Archivos y directorios**: Se organizan en una jerarquía que puede ser tan profunda como se necesite.
+
+Por ejemplo, una ruta en zFS podría verse como:
+
+```
+/usr/data/myapp/logs
+```
+
+En esta estructura:
+
+- `/usr` es un directorio de nivel superior.
+- `/data` y `/myapp` son subdirectorios.
+- `logs` es un archivo o subdirectorio dentro del directorio `/myapp`.
+
+### Ejemplos de Uso de **zFS**
+
+
+
+#### 1. Crear un Sistema de Archivos zFS
+
+
+Para crear un sistema de archivos zFS en z/OS, se utiliza el comando **zfs create**. El siguiente ejemplo crea un nuevo sistema de archivos zFS llamado `/mydata`:
+
+```bash
+zfs create MYPOOL/mydata
+```
+
+En este caso:
+- `MYPOOL` es el **pool de almacenamiento** donde se almacena el sistema de archivos.
+- `mydata` es el nombre del directorio o sistema de archivos creado.
+
+
+
+
+#### 2. Verificar el Estado de un Sistema de Archivos zFS
+
+Para verificar el estado y las propiedades de un sistema de archivos zFS, puedes usar el siguiente comando:
+
+```bash
+zfs list MYPOOL/mydata
+```
+
+Esto devuelve información sobre el sistema de archivos, como el espacio utilizado y libre, y las propiedades de rendimiento.
+
+#### 3. Montar un Sistema de Archivos zFS
+
+Para montar un sistema de archivos zFS, puedes usar el comando **mount**. Por ejemplo:
+
+```bash
+mount -v zfs MYPOOL/mydata /mnt/mydata
+```
+
+Esto montará el sistema de archivos **MYPOOL/mydata** en el directorio local `/mnt/mydata`.
+
+
+
+#### 4. Crear Archivos en zFS
+
+Puedes trabajar con archivos dentro de zFS de la misma forma que en un sistema de archivos Unix/Linux. Por ejemplo, para crear un archivo dentro del sistema de archivos zFS montado, se puede usar un editor de texto o el comando **echo**:
+
+```bash
+echo "Hello, zFS!" > /mnt/mydata/hello.txt
+```
+
+Este comando crea un archivo llamado `hello.txt` en el directorio `/mnt/mydata` con el contenido `Hello, zFS!`.
+
+#### 5. Verificar Archivos en zFS
+Una vez creado el archivo, puedes usar comandos como **ls** o **cat** para ver su contenido:
+
+```bash
+cat /mnt/mydata/hello.txt
+```
+
+Esto mostrará el contenido del archivo `hello.txt` dentro del sistema de archivos zFS.
+
+
+
+### Ventajas de **zFS**
+
+1. **Escalabilidad**: Ideal para manejar grandes volúmenes de datos en entornos mainframe.
+2. **Alta disponibilidad**: Gracias a la integración con z/OS, se beneficia de las capacidades de disponibilidad de sistemas distribuidos como **sysplex**.
+3. **Seguridad**: Integración con RACF para control de acceso y protección de datos.
+4. **Compatibilidad con Unix**: Permite que las aplicaciones y scripts basados en Unix funcionen sin modificaciones significativas en el entorno mainframe.
+5. **Rendimiento**: Optimizado para entornos de alto rendimiento como los que se requieren en mainframes z/OS.
+
+
+### Conclusión
+
+zFS es una solución avanzada de almacenamiento en el entorno mainframe que proporciona un sistema de archivos flexible y escalable. A través de su integración con Unix y z/OS, permite gestionar grandes volúmenes de datos de manera eficiente, con alta disponibilidad, seguridad avanzada y alto rendimiento. Es ideal para aplicaciones y entornos que requieren almacenamiento robusto y confiable, con la ventaja adicional de ser completamente compatible con las herramientas y procesos tradicionales de z/OS.
+
+
+
+
+//////////////
+
+
+UTILITARIO DSS
+
+
+### ¿Qué es **DSS** (Data Set Services) en Mainframe?
+
+**DSS** (Data Set Services) es un conjunto de utilitarios y servicios en **z/OS** que permite a los administradores y usuarios gestionar datasets (conjuntos de datos) de manera eficiente. DSS facilita operaciones como la **copias de seguridad, restauración, gestión de espacio**, y otras actividades relacionadas con la manipulación de datasets en el sistema mainframe. DSS es parte de la infraestructura de administración de almacenamiento y está integrado con otras funcionalidades de z/OS, como **DFSMS** (Data Facility Storage Management Subsystem).
+
+### Funciones Principales de **DSS**
+
+1. **Copias de Seguridad y Recuperación**:
+   - DSS permite realizar copias de seguridad (backups) y recuperaciones de datasets completos, tanto para datasets de usuario como para datasets del sistema.
+   
+2. **Gestión de Espacio de Almacenamiento**:
+   - Ayuda a gestionar el espacio de almacenamiento disponible al permitir la reorganización y la eliminación de datasets obsoletos o innecesarios.
+
+3. **Compresión de Datasets**:
+   - Ofrece la capacidad de comprimir datasets para ahorrar espacio en el almacenamiento, especialmente útil para archivos de grandes dimensiones.
+
+4. **Transformación de Datos**:
+   - Permite transformar datasets de un tipo a otro, como convertir un archivo secuencial a un formato de base de datos o viceversa.
+
+5. **Copia y Migración de Datasets**:
+   - DSS facilita la migración de datasets entre diferentes volúmenes o ubicaciones, lo que es útil cuando se mueve datos entre diferentes niveles de almacenamiento.
+
+6. **Gestión de Datasets de Tipo VSAM y No-VSAM**:
+   - Proporciona herramientas para manipular tanto datasets VSAM (Virtual Storage Access Method) como datasets no-VSAM.
+
+### ¿Cómo Funciona DSS?
+
+DSS interactúa con otros subsistemas de almacenamiento como **DFSMS**, y permite realizar operaciones sobre datasets utilizando un conjunto de comandos y utilitarios. Puede operar tanto de forma manual mediante comandos como automáticamente en función de políticas de gestión de almacenamiento predefinidas.
+
+### Comandos Comunes de DSS
+
+A continuación se muestran algunos de los comandos más comunes de DSS que se utilizan para diferentes tipos de operaciones sobre datasets:
+
+1. **COPY**:
+   - Permite copiar datasets completos de un lugar a otro.
+   - **Ejemplo**:
+     ```plaintext
+     COPY DSN=MY.FILE1, NEWDSN=MY.BACKUP.FILE
+     ```
+     En este ejemplo, el dataset `MY.FILE1` se copia a `MY.BACKUP.FILE`.
+
+2. **BACKUP**:
+   - Se usa para hacer una copia de seguridad de un dataset.
+   - **Ejemplo**:
+     ```plaintext
+     BACKUP DSN=MY.FILE, BACKUPDSN=MY.FILE.BACKUP
+     ```
+     En este caso, `MY.FILE` se respalda en `MY.FILE.BACKUP`.
+
+3. **RESTORE**:
+   - Utilizado para restaurar un dataset desde una copia de seguridad.
+   - **Ejemplo**:
+     ```plaintext
+     RESTORE DSN=MY.FILE, FROMDSN=MY.FILE.BACKUP
+     ```
+     Esto restaura `MY.FILE` desde la copia de seguridad `MY.FILE.BACKUP`.
+
+4. **DELETE**:
+   - Elimina un dataset.
+   - **Ejemplo**:
+     ```plaintext
+     DELETE DSN=MY.FILE
+     ```
+     Este comando elimina el dataset `MY.FILE`.
+
+5. **REORG**:
+   - Realiza una reorganización de datasets, útil en datasets de tipo VSAM para mejorar la eficiencia y el rendimiento.
+   - **Ejemplo**:
+     ```plaintext
+     REORG DSN=MY.VSAM.FILE
+     ```
+     Este comando reorganiza el dataset VSAM `MY.VSAM.FILE` para optimizar su acceso y almacenamiento.
+
+6. **LIST**:
+   - Muestra una lista de datasets que cumplen con ciertos criterios.
+   - **Ejemplo**:
+     ```plaintext
+     LIST DSN=MY.*.LOG
+     ```
+     Muestra todos los datasets cuyo nombre comienza con `MY.` y termina con `.LOG`.
+
+### Ejemplo de Uso de DSS en JCL
+
+A continuación, se presenta un ejemplo de cómo se puede utilizar un utilitario DSS en un job de JCL para respaldar un dataset:
+
+```JCL
+//BACKUP JOB 'BACKUP JOB',CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+//STEP1    EXEC PGM=IEBGENER
+//SYSPRINT DD  SYSOUT=*
+//SYSUT1   DD  DSN=MY.FILE,DISP=SHR
+//SYSUT2   DD  DSN=MY.BACKUP.FILE,DISP=(NEW,CATLG),
+//            SPACE=(CYL,(10,5)),UNIT=SYSDA
+```
+
+En este caso:
+
+- **SYSUT1** es el dataset original `MY.FILE` que se desea respaldar.
+- **SYSUT2** es el destino donde se almacenará la copia de seguridad `MY.BACKUP.FILE`.
+- El parámetro **DISP=(NEW,CATLG)** indica que el dataset de destino es nuevo y debe catalogarse una vez creado.
+
+
+
+### Ventajas del Uso de DSS
+
+1. **Automatización de Gestión de Datos**:
+
+   - Facilita la automatización de la creación de copias de seguridad, la recuperación de datos y la gestión del espacio en disco sin necesidad de intervención manual.
+
+
+2. **Optimización de Almacenamiento**:
+
+   - Ayuda a optimizar el uso del almacenamiento al permitir la reorganización y compresión de datasets.
+
+
+3. **Integración con Otros Servicios de z/OS**:
+
+   - DSS se integra de manera fluida con otros servicios de gestión de almacenamiento en z/OS, como DFSMS, para automatizar las tareas de administración de datasets.
+
+
+4. **Seguridad y Control**:
+
+   - Proporciona control de acceso y seguridad en las operaciones sobre datasets mediante el uso de RACF y otros controles de seguridad de z/OS.
+
+
+5. **Alta Disponibilidad**:
+
+   - Permite realizar copias de seguridad y recuperación de datos de manera eficiente, garantizando que los datasets estén siempre disponibles.
+
+### Conclusión
+
+El **utilitario DSS** en mainframe es una herramienta esencial para la gestión de datasets en z/OS. Facilita la realización de copias de seguridad, la restauración, la reorganización y la optimización del almacenamiento de manera eficiente, todo mientras se integra de forma fluida con el resto del ecosistema de z/OS. Su uso adecuado puede mejorar la gestión de datos, reducir la intervención manual y optimizar el rendimiento general del sistema mainframe.
+
+
+
+
+********************
+
+
+
+UTILITARIO RMM
+
+
+### ¿Qué es el **utilitario RMM** en Mainframe?
+
+**RMM** (Robot Management and Monitoring) es un utilitario en **z/OS** que se utiliza principalmente para la gestión y monitorización de **medios de almacenamiento**. Está asociado con la gestión de bibliotecas de cintas, discos y otros dispositivos de almacenamiento que se utilizan en el sistema mainframe. RMM permite a los administradores gestionar el ciclo de vida de los medios de almacenamiento, asegurando que los datos sean archivados, recuperados y manipulados de acuerdo con las políticas del sistema.
+
+En el contexto de un mainframe, los **medios de almacenamiento** son dispositivos como **cintas magnéticas**, discos, y otros periféricos de almacenamiento. RMM proporciona un control preciso sobre el uso de estos dispositivos y automatiza muchas de las tareas de administración relacionadas.
+
+### Funciones Principales del Utilitario RMM
+
+1. **Gestión de Bibliotecas de Cintas**:
+   - RMM ayuda a gestionar las bibliotecas de cintas, incluyendo la catalogación, la ubicación de las cintas, y la realización de copias de seguridad y recuperación.
+
+2. **Asignación de Medios**:
+   - RMM facilita la asignación de cintas y otros medios de almacenamiento a trabajos y tareas específicas. Esto incluye el control del acceso a los medios de almacenamiento, asegurando que los datos se escriban en los dispositivos correctos.
+
+3. **Control de Medios de Almacenamiento**:
+   - El utilitario proporciona una interfaz para realizar un seguimiento de los medios de almacenamiento, su estado, y su ubicación dentro del sistema. Los administradores pueden hacer un seguimiento de la vida útil de los medios y realizar operaciones como la desactivación de medios antiguos.
+
+4. **Automatización de Operaciones de Medios**:
+   - RMM automatiza tareas como el traslado de cintas de un lugar a otro, la recuperación de archivos archivados, la rotación de cintas para asegurarse de que las más antiguas se utilicen primero (política de **FIFO**), y otras funciones de administración.
+
+5. **Monitoreo y Reportes**:
+   - RMM permite a los administradores generar informes detallados sobre el uso de los medios, el estado de las bibliotecas de cintas y discos, y los trabajos realizados con los medios. Esto ayuda a mejorar la eficiencia operativa y la disponibilidad de los datos.
+
+6. **Gestión de Ciclo de Vida de Medios**:
+   - Permite la gestión del ciclo de vida de los medios de almacenamiento, desde su creación, uso, hasta su desactivación o retiro cuando ya no son necesarios.
+
+7. **Integración con Otros Sistemas de Gestión de Almacenamiento**:
+   - RMM se integra con otros subsistemas de z/OS como **DFSMS** (Data Facility Storage Management Subsystem) para realizar operaciones de almacenamiento avanzadas.
+
+### Ejemplos de Uso de RMM en Mainframe
+
+1. **Asignación de Medios de Cinta a un Trabajo**:
+   
+   Un trabajo en JCL puede requerir el uso de una cinta específica. Con RMM, se puede asignar un medio de almacenamiento de cinta a un trabajo para su uso.
+
+   **Ejemplo de JCL**:
+   ```JCL
+   //BACKUP    JOB 'BACKUP JOB',CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+   //STEP1      EXEC PGM=IEBGENER
+   //SYSPRINT   DD   SYSOUT=*
+   //SYSUT1     DD   DSN=MY.FILE,DISP=SHR
+   //SYSUT2     DD   DSN=MY.BACKUP.TAPE,DISP=(NEW,KEEP),UNIT=TAPE
+   ```
+   En este ejemplo:
+   - **SYSUT2** se asigna a una cinta de almacenamiento con el nombre `MY.BACKUP.TAPE`.
+   - RMM gestiona el proceso de asignación y la ubicación de la cinta en la biblioteca.
+
+2. **Desasignación de Medios Usados**:
+
+   Después de completar un trabajo, RMM puede ser utilizado para liberar el medio de almacenamiento que se usó, lo que puede incluir mover la cinta a un estante de almacenamiento o marcarla como disponible para reutilización.
+
+   **Ejemplo de Uso de RMM**:
+   ```plaintext
+   RMM REMOVE TAPE MY.BACKUP.TAPE
+   ```
+   En este caso, el comando **REMOVE** en RMM elimina la cinta `MY.BACKUP.TAPE` de la asignación actual y la pone de nuevo en el inventario disponible.
+
+3. **Rotación de Cintas (FIFO)**:
+
+   Si se usa una política de **FIFO** (First In, First Out), RMM puede automatizar la rotación de cintas, asegurando que las cintas más antiguas sean utilizadas primero para operaciones de escritura o lectura.
+
+   **Ejemplo**:
+   ```plaintext
+   RMM ROTATE CINTAS
+   ```
+   Este comando se usaría para asegurarse de que las cintas más antiguas en la biblioteca de cintas sean las primeras en ser reutilizadas.
+
+4. **Generación de Informes de Estado de Medios**:
+
+   RMM puede generar informes detallados sobre el estado de los medios de almacenamiento, como el número de cintas disponibles, las que están en uso y el estado de las bibliotecas de cintas.
+
+   **Ejemplo**:
+   ```plaintext
+   RMM REPORT STATUS
+   ```
+   Este comando muestra un informe sobre las cintas y dispositivos asociados, permitiendo a los administradores ver el estado actual de todos los medios.
+
+### Ventajas de Usar RMM
+
+1. **Automatización**:
+   - La capacidad de automatizar la asignación, desasignación y rotación de medios mejora la eficiencia operativa y reduce la carga administrativa.
+
+2. **Mejora la Gestión de Almacenamiento**:
+   - Permite un control centralizado de todos los dispositivos de almacenamiento, incluidas las bibliotecas de cintas y discos, ayudando a mantener los datos bien organizados.
+
+3. **Reducción de Errores Manuales**:
+   - Al automatizar las tareas repetitivas y permitir la gestión centralizada, se reduce la probabilidad de errores humanos en la administración de medios.
+
+4. **Optimización del Uso de Cintas**:
+   - Con la integración de políticas como **FIFO**, se asegura que las cintas más antiguas se utilicen primero, optimizando el uso del almacenamiento disponible.
+
+5. **Facilidad de Auditoría y Reportes**:
+   - Los informes generados por RMM permiten realizar auditorías fácilmente, lo que ayuda a los administradores a realizar un seguimiento del uso de los medios de almacenamiento y detectar posibles problemas.
+
+### Conclusión
+
+**RMM (Robot Management and Monitoring)** es un componente esencial en los entornos mainframe para la gestión eficiente de los medios de almacenamiento. Con sus capacidades de asignación, control de ciclo de vida, automatización de tareas y generación de informes, ayuda a los administradores a gestionar grandes volúmenes de datos con mayor eficiencia y menor riesgo de error.
+
+
+
+
+/////////////////////
+
+
+
+CLASE 19/11/24 :
+
+
+
+LINK CON INFORMACION :
+
+
+https://www.ibm.com/docs/en/zos/2.5.0?topic=documentation-pdf-files-zos-250-library
+
+
+VER MANUAL DE NFS.
+
+
+Abstract for Network File System Guide and Reference
+
+
+
+
+HARDWARE SYSTEM AREA (HSA)
+
+
+El **Hardware System Area (HSA)** es una región de memoria reservada dentro del hardware de un sistema mainframe IBM que se utiliza para almacenar datos críticos del sistema. Estos datos son esenciales para la operación del procesador y la interacción con otros componentes del sistema. El HSA es administrado por el hardware y no está disponible para el sistema operativo ni para las aplicaciones.
+
+
+### **¿Qué contiene el HSA?**
+
+El HSA incluye información necesaria para:
+
+1. **Control de configuraciones dinámicas:** Almacena datos sobre los dispositivos conectados al sistema y sus configuraciones, incluyendo los cambios realizados a través de operaciones dinámicas.
+
+2. **Soporte a la virtualización y particionamiento lógico (LPAR):** Contiene datos de control que permiten al sistema dividirse en particiones lógicas independientes.
+
+3. **Canales de entrada/salida (I/O):** Mantiene tablas de direccionamiento y datos relacionados con el acceso a dispositivos I/O.
+
+4. **Gestión de interrupciones:** Incluye información sobre la priorización y manejo de interrupciones.
+
+5. **Sincronización y estado del sistema:** Almacena datos utilizados durante el arranque y para mantener el estado coherente de un sistema Sysplex.
+
+
+### **Ejemplo de uso del HSA**
+
+Cuando se realiza una actualización dinámica de la configuración del sistema, como agregar un nuevo canal o dispositivo de almacenamiento sin reiniciar el mainframe, el HSA juega un papel clave. Por ejemplo:
+- Se conecta un nuevo disco a un canal I/O.
+- El HSA registra esta nueva conexión y actualiza las tablas de direccionamiento.
+- El sistema operativo accede a estos datos actualizados para reconocer y utilizar el nuevo disco.
+
+
+### **Tamaño del HSA**
+
+El tamaño del HSA se define durante la configuración inicial del sistema (IPL - Initial Program Load). Debe ser lo suficientemente grande para manejar los datos necesarios, especialmente en entornos con muchas particiones lógicas (LPARs) o configuraciones complejas de Sysplex.
+
+
+### **Relación con el IOCDS**
+
+El HSA utiliza información del **Input/Output Configuration Data Set (IOCDS)**, que contiene los detalles de configuración I/O del sistema. Durante el arranque, el contenido del IOCDS se carga en el HSA para que el hardware lo utilice.
+
+En resumen, el HSA es una parte crítica del hardware del mainframe que garantiza el funcionamiento eficiente y la gestión dinámica de los recursos del sistema.
+
+
+
+
+Dynamic Configuration Management (DCM) 
+
+
+
+El **Dynamic Configuration Management (DCM)** es una capacidad de los sistemas mainframe que permite realizar cambios en la configuración del hardware y del sistema operativo sin necesidad de detener el sistema o reiniciarlo. Esto incluye la adición, eliminación o modificación de dispositivos y recursos del sistema, lo que mejora la flexibilidad, la disponibilidad y el tiempo de actividad.
+
+
+### **¿Qué implica el Dynamic Configuration Management?**
+
+1. **Configuración de dispositivos de entrada/salida (I/O):**
+
+   - Adición o eliminación de discos, cintas, impresoras, canales o unidades de control.
+   - Cambios en la asignación de dispositivos a particiones lógicas (LPARs).
+
+
+2. **Cambios en recursos de memoria y CPU:**
+
+   - Ajustes dinámicos en el tamaño de la memoria asignada a una LPAR.
+   - Incremento o reducción del número de procesadores dedicados a una LPAR.
+
+3. **Gestión en un entorno Sysplex:**
+
+   - Ajustes en la configuración de conexiones y recursos compartidos entre sistemas en un Sysplex.
+
+
+4. **Configuración de software:**
+
+   - Actualización de parámetros del sistema operativo o activación de funciones sin reiniciar el sistema.
+
+---
+
+### **Ventajas del Dynamic Configuration Management**
+
+1. **Alta disponibilidad:**
+   - Permite cambios en el sistema sin interrumpir las aplicaciones o servicios en ejecución.
+
+2. **Flexibilidad:**
+   - Facilita la adaptación a necesidades de negocio en tiempo real, como aumentar recursos durante períodos de alta demanda.
+
+3. **Eficiencia:**
+   - Minimiza los tiempos de inactividad, ya que no es necesario un reinicio para aplicar cambios.
+
+4. **Reducción de costos:**
+   - Menor tiempo fuera de servicio y optimización del uso de recursos.
+
+---
+
+### **Ejemplo práctico de Dynamic Configuration Management**
+
+#### **Caso 1: Adición de un dispositivo de almacenamiento**
+1. Un administrador necesita agregar un nuevo disco para soportar un aumento de datos en una aplicación crítica.
+2. Con DCM, puede conectar el dispositivo al sistema mientras está en funcionamiento.
+3. El sistema detecta automáticamente el nuevo disco a través del HSA y actualiza las tablas de configuración I/O.
+4. El disco se activa y se asigna a la LPAR correspondiente sin afectar las aplicaciones en ejecución.
+
+#### **Caso 2: Ajuste de procesadores en una LPAR**
+1. Durante un pico de carga, una LPAR requiere más capacidad de procesamiento.
+2. Usando DCM, el administrador puede asignar procesadores adicionales a la LPAR sin detenerla.
+3. Las aplicaciones de la LPAR aprovechan inmediatamente los recursos adicionales.
+
+#### **Caso 3: Cambios en un Sysplex**
+1. Se añade un nuevo sistema al Sysplex para aumentar la capacidad de procesamiento del clúster.
+2. Los componentes del Sysplex, como el **Coupling Facility**, se actualizan dinámicamente para incluir el nuevo sistema sin interrumpir el servicio.
+
+---
+
+### **Herramientas relacionadas con DCM**
+
+1. **HCD (Hardware Configuration Definition):**
+   - Utilizado para definir la configuración de hardware y preparar cambios que pueden ser aplicados dinámicamente.
+
+2. **Dynamic I/O Configuration (DIO):**
+   - Permite aplicar cambios en la configuración I/O en tiempo real.
+
+3. **Sysplex Configuration Manager:**
+   - Gestiona dinámicamente los recursos compartidos entre sistemas en un Sysplex.
+
+---
+
+En resumen, el Dynamic Configuration Management es una funcionalidad esencial para mantener la continuidad de los servicios y adaptarse a las demandas cambiantes del negocio sin interrumpir las operaciones en un entorno mainframe.
+
+
+IMPORTANTE : ESTAS HERRAMIENTAS ELIMINAN LA NECESIDAD DE POWER ON RESET.
+
+
+
+COMANDO SDSF
+
+
+COMANDO U :  SE PUEDE VER EL LOG DE FORMA MAS DETALLADA.
+
+
+COMANDO :
+
+/D SMS,SG(SGARCH)
+
+
+IMPORTANTE :  BRINDA ESPACIO DEL STORAGE, ESPACIO DE USO.
+
+SE PUEDEN CONFIGURAR ALERTAS, CON UN MENSAJE AL SISLOG.
+
+ESTE MENSAJE AL SISLOG SE PUEDE CONFIGURAR DE DISTINTAS FORMAS.
+
+
+
+ SDSF ULOG  CONSOLE RRFORTE                        LINE  COMMAND ISSUED  
+ COMMAND INPUT ===>                                            SCROLL ===
+ RESPONSE=S0W1                                                           
+  IGD002I 07:35:17 DISPLAY SMS 004                                       
+                                                                         
+  STORGRP  TYPE    SYSTEM= 1                                             
+  SGARCH   POOL            +                                             
+    SPACE INFORMATION:                                                   
+    TOTAL SPACE = 8120MB USAGE% = 30 ALERT% = 0                          
+    TRACK-MANAGED SPACE = 8120MB USAGE% = 30 ALERT% = 0                  
+  ***************************** LEGEND *****************************     
+  . THE STORAGE GROUP OR VOLUME IS NOT DEFINED TO THE SYSTEM             
+  + THE STORAGE GROUP OR VOLUME IS ENABLED                               
+  - THE STORAGE GROUP OR VOLUME IS DISABLED                              
+  * THE STORAGE GROUP OR VOLUME IS QUIESCED                              
+  D THE STORAGE GROUP OR VOLUME IS DISABLED FOR NEW ALLOCATIONS ONLY     
+  Q THE STORAGE GROUP OR VOLUME IS QUIESCED FOR NEW ALLOCATIONS ONLY     
+  > THE VOLSER IN UCB IS DIFFERENT FROM THE VOLSER IN CONFIGURATION      
+  SYSTEM  1 = S0W1                                                       
+
+
+
+
+
+NETVIEW
+
+
+**NetView** es una solución de IBM diseñada para la gestión de redes y sistemas en un entorno mainframe. Forma parte del conjunto de herramientas de IBM z/OS y proporciona capacidades de supervisión, automatización, diagnóstico y resolución de problemas para redes y recursos conectados al mainframe.
+
+### **¿Qué es NetView?**
+
+NetView es una herramienta de software que permite a los administradores gestionar y supervisar redes de manera centralizada. Está diseñado para integrarse con sistemas IBM z/OS y otros componentes del ecosistema de mainframes, como VTAM (Virtual Telecommunications Access Method) e IMS. Su principal objetivo es garantizar la continuidad y disponibilidad de la red.
+
+---
+
+### **Funciones principales de NetView**
+
+1. **Supervisión de redes:**
+   - Monitorea dispositivos y conexiones de red en tiempo real.
+   - Detecta problemas como caídas de enlaces, errores de configuración o degradación del rendimiento.
+
+2. **Automatización de tareas:**
+   - Permite crear scripts y reglas para responder automáticamente a eventos o alarmas, como reiniciar un enlace o notificar a un administrador.
+
+3. **Gestión de eventos y alertas:**
+   - Captura, registra y categoriza eventos importantes para ayudar a los equipos de TI a priorizar acciones.
+
+4. **Diagnóstico de problemas:**
+   - Proporciona herramientas para analizar y resolver problemas de red, como trazado de rutas y análisis de errores.
+
+5. **Soporte para redes heterogéneas:**
+   - Compatible con múltiples protocolos de red, incluyendo TCP/IP y SNA (Systems Network Architecture).
+
+6. **Integración con otras herramientas:**
+   - Se integra con herramientas como z/OS Communications Server, Tivoli Netcool/OMNIbus y sistemas de gestión de eventos.
+
+---
+
+### **Componentes clave de NetView**
+
+1. **Consola de comandos:**
+   - Permite a los administradores ejecutar comandos en tiempo real para supervisar y gestionar la red.
+
+2. **Automatización:**
+   - Incluye un motor de reglas que responde automáticamente a condiciones predefinidas.
+
+3. **Registro y análisis:**
+   - Guarda información histórica de eventos y actividades para análisis posterior.
+
+4. **Interfaz gráfica (opcional):**
+   - Ofrece un entorno más amigable para gestionar redes complejas.
+
+---
+
+### **Ejemplo práctico del uso de NetView**
+
+#### **Caso: Supervisión de un enlace de red**
+1. Una organización utiliza NetView para supervisar un enlace crítico que conecta el mainframe con sucursales remotas.
+2. NetView detecta una latencia anormal en el enlace y genera una alerta.
+3. El motor de automatización ejecuta un script para diagnosticar el problema, como verificar las métricas de tráfico o reiniciar el dispositivo de red afectado.
+4. Si el problema persiste, NetView envía una notificación al equipo de TI para una intervención manual.
+5. Toda la actividad es registrada para análisis y ajuste futuro de las reglas de automatización.
+
+---
+
+### **Beneficios de NetView**
+
+1. **Mayor disponibilidad:**
+   - Detecta y resuelve problemas rápidamente, minimizando el tiempo de inactividad.
+
+2. **Automatización eficiente:**
+   - Reduce la carga de trabajo manual al responder automáticamente a eventos comunes.
+
+3. **Análisis mejorado:**
+   - Proporciona datos históricos y herramientas analíticas para identificar patrones y prevenir problemas.
+
+4. **Integración con sistemas existentes:**
+   - Funciona perfectamente con otros componentes del ecosistema z/OS y herramientas de red.
+
+---
+
+En resumen, **NetView** es una herramienta esencial en entornos mainframe para garantizar la operación eficiente de redes críticas, reducir el tiempo de respuesta ante problemas y mantener la estabilidad del sistema.
+
+
+
+
+
+
+ARCHIVOS CATALOGADOS Y NO CATALOGADOS
+
+
+
+ BROWSE    RIRI.LYB(IEFBR14B) - 01.02               Line 0000000000 Col
+ Command ===>                                                  Scroll =
+********************************* Top of Data *************************
+//IEFBR14B   JOB  NOTIFY=&SYSUID                                       
+//*                                                                    
+//*------------------------------------------------------------------* 
+//*    /M A85,VOL=(SL,B5PAGB),USE=STORAGE                              
+//*------------------------------------------------------------------* 
+//            EXEC  PGM=IEFBR14                                        
+//DD01      DD DISP=(NEW,CATLG),DSN=RIRI.NOCATAL,                      
+//             STORCLAS=SCNOSMS,                                       
+//             UNIT=3390,SPACE=(TRK,(5,5))                             
+//*------------------------------------------------------------------* 
+//*                        ---  FIN  ---                             * 
+//*------------------------------------------------------------------* 
+******************************** Bottom of Data ***********************
+
+
+..
+
+
+
+ARCHIVOS CATALOGADOS Y NO CATALOGADOS
+
+
+En el contexto de mainframes, los **archivos catalogados** y **no catalogados** se refieren a cómo se administran y acceden los datasets (conjuntos de datos) en el sistema. Los catálogos son bases de datos especiales utilizadas para rastrear la ubicación física y las propiedades de los datasets.
+
+---
+
+### **Archivos Catalogados**
+
+Un **archivo catalogado** es aquel que está registrado en un **catálogo de sistema o usuario**. Estos catálogos almacenan información sobre el dataset, como su nombre, ubicación física (unidad de disco) y atributos. 
+
+
+#### **Características de los archivos catalogados:**
+
+1. **Facilidad de acceso:**
+   - El sistema operativo puede localizar el dataset automáticamente con solo especificar su nombre en el JCL (Job Control Language).
+   - No es necesario proporcionar detalles físicos como el volumen o la unidad.
+
+2. **Uso de catálogos:**
+   - El sistema usa un catálogo maestro (**Master Catalog**) y catálogos de usuario (**User Catalogs**) para organizar los registros.
+
+3. **Mayor seguridad:**
+   - Pueden tener restricciones de acceso mediante herramientas como RACF.
+
+4. **Mejor gestión:**
+   - Los catálogos permiten realizar cambios en la ubicación física de un dataset sin afectar a las aplicaciones que lo usan.
+
+#### **Ejemplo en JCL:**
+```jcl
+//STEP01  EXEC PGM=MYPROG
+//INPUT1  DD   DSN=MI.DATASET.CATALOGADO,DISP=SHR
+```
+En este caso, el sistema localiza automáticamente `MI.DATASET.CATALOGADO` porque está catalogado.
+
+---
+
+### **Archivos No Catalogados**
+
+Un **archivo no catalogado** no está registrado en un catálogo. Para acceder a él, es necesario especificar su ubicación física exacta, incluyendo el **volumen** y la **unidad** en el JCL.
+
+
+#### **Características de los archivos no catalogados:**
+
+1. **Acceso manual:**
+   - El usuario debe proporcionar más detalles para localizar el dataset.
+
+2. **Uso temporal o específico:**
+   - Frecuentemente se utilizan para datasets temporales, copias de seguridad o situaciones en las que no se desea registrar el archivo en un catálogo.
+
+3. **Mayor complejidad:**
+   - Requiere un conocimiento exacto de la ubicación física del dataset.
+
+#### **Ejemplo en JCL:**
+```jcl
+//STEP01  EXEC PGM=MYPROG
+//INPUT1  DD   DSN=MI.DATASET.NOCATALOGADO,DISP=SHR,
+//             UNIT=SYSDA,VOL=SER=VOL001
+```
+Aquí, `MI.DATASET.NOCATALOGADO` no está catalogado, por lo que el usuario especifica que está en el volumen `VOL001` y en la unidad `SYSDA`.
+
+---
+
+### **Diferencias principales entre catalogados y no catalogados:**
+
+| Característica           | Archivos Catalogados                    | Archivos No Catalogados                |
+|--------------------------|------------------------------------------|-----------------------------------------|
+| **Acceso**               | Automático mediante el catálogo         | Requiere detalles físicos manualmente  |
+| **Flexibilidad**         | Fácil de mover entre unidades           | Más rígido, depende de la ubicación física |
+| **Gestión**              | Eficiente y automatizada                | Requiere más intervención manual       |
+| **Uso común**            | Datasets permanentes y críticos         | Datasets temporales o específicos      |
+
+---
+
+### **Conclusión**
+
+- **Archivos catalogados**: Son más convenientes para datasets que se usan frecuentemente o que deben mantenerse por largo plazo, ya que facilitan la gestión y el acceso.
+- **Archivos no catalogados**: Se utilizan en casos específicos donde la ubicación física no se necesita rastrear de forma centralizada, o para datasets temporales.
+
+Usar el método adecuado depende de las necesidades de gestión y las políticas del entorno mainframe en cuestión.
+
+
+
+
+
+USO DEL SMS PARA ARCHIVOS CATALOGADOS Y NO CATALOGADOS
+
+
+
+El **System Managed Storage (SMS)** es una funcionalidad de los sistemas mainframe que automatiza la asignación, administración y acceso de los datasets, tanto catalogados como no catalogados. SMS es clave para simplificar la gestión del almacenamiento en entornos complejos, asegurando que los datasets se asignen y utilicen de manera eficiente según políticas predefinidas.
+
+---
+
+### **Cómo opera SMS con archivos catalogados y no catalogados**
+
+#### **Archivos Catalogados con SMS**
+SMS facilita la administración de los archivos catalogados al asignar automáticamente recursos de almacenamiento según las políticas definidas en el sistema.
+
+1. **Asignación automática de volúmenes:**
+   - El SMS selecciona automáticamente el volumen adecuado para el dataset basado en sus políticas de clase de almacenamiento.
+
+2. **Políticas definidas por el administrador:**
+   - Las clases de almacenamiento, gestión y datos definen cómo se almacenan, administran y protegen los archivos catalogados.
+     - **Clase de almacenamiento (STORCLAS):** Determina el tipo de dispositivo de almacenamiento.
+     - **Clase de datos (DATACLAS):** Define atributos como el formato del dataset o la compresión.
+     - **Clase de gestión (MGMTCLAS):** Define reglas de retención, migración y backup.
+
+3. **Localización automática:**
+   - El catálogo, en combinación con SMS, permite al sistema localizar y acceder al dataset sin necesidad de especificar detalles físicos.
+
+4. **Ejemplo en JCL:**
+   Cuando SMS está habilitado, los detalles físicos no son necesarios:
+   ```jcl
+   //STEP01  EXEC PGM=MYPROG
+   //OUTPUT1 DD   DSN=MI.DATASET.CATALOGADO,
+   //             DISP=(NEW,CATLG,DELETE),
+   //             STORCLAS=STANDARD
+   ```
+   Aquí, SMS asigna automáticamente el volumen y la unidad adecuados.
+
+---
+
+#### **Archivos No Catalogados con SMS**
+Aunque SMS puede manejar archivos no catalogados, estos requieren detalles más específicos en el JCL debido a la ausencia de un registro en el catálogo.
+
+1. **Asignación controlada por el usuario:**
+   - Se debe especificar el volumen y la unidad en el JCL, aunque SMS puede aplicar políticas de clase para estos archivos.
+
+2. **Integración con políticas SMS:**
+   - Aunque no están catalogados, se pueden aplicar políticas de clase para gestionar características como la retención y el backup.
+
+3. **Menor automatización:**
+   - La falta de un catálogo implica que el sistema no puede localizar automáticamente el archivo; el usuario debe proporcionar los detalles.
+
+4. **Ejemplo en JCL:**
+   ```jcl
+   //STEP01  EXEC PGM=MYPROG
+   //OUTPUT1 DD   DSN=MI.DATASET.NOCATALOGADO,
+   //             DISP=(NEW,DELETE,DELETE),
+   //             UNIT=SYSDA,VOL=SER=VOL001,
+   //             DATACLAS=TEMP
+   ```
+   Aquí, SMS usa la clase `TEMP` para aplicar reglas al dataset no catalogado.
+
+---
+
+### **Diferencias entre catalogados y no catalogados con SMS**
+
+| Aspecto                    | Archivos Catalogados                   | Archivos No Catalogados                |
+|----------------------------|-----------------------------------------|-----------------------------------------|
+| **Automatización SMS**     | Totalmente automatizado                | Parcial, requiere detalles físicos     |
+| **Asignación de recursos** | Basada en políticas SMS                | Depende de los parámetros del JCL      |
+| **Gestión del catálogo**   | Automática (registro en el catálogo)   | No se registra en el catálogo          |
+| **Localización**           | Automática mediante el catálogo        | Manual por parte del usuario           |
+| **Uso común**              | Datasets permanentes                   | Datasets temporales o específicos      |
+
+---
+
+### **Ventajas del uso de SMS**
+
+1. **Optimización del almacenamiento:**
+   - SMS asegura que los datasets se asignen a volúmenes adecuados según las políticas definidas.
+2. **Mayor flexibilidad:**
+   - Permite manejar tanto datasets catalogados como no catalogados con eficiencia.
+3. **Reducción de errores:**
+   - Automatiza la asignación de recursos, minimizando errores humanos.
+4. **Gestión centralizada:**
+   - Simplifica la administración de datasets, respaldos y retenciones.
+
+---
+
+
+### **Conclusión**
+
+
+El uso de **SMS** mejora significativamente la gestión de archivos tanto catalogados como no catalogados. Mientras que los archivos catalogados se benefician de la automatización total y localización simplificada, los no catalogados pueden utilizar políticas SMS para ciertos aspectos de su administración. SMS permite a las organizaciones optimizar el almacenamiento y garantizar que los recursos se utilicen eficientemente según las necesidades operativas.
+
+
+
+
+///////////////////
+
+
+
+PDSE V2 Member Generations 6.3.1
+
+
+
+
+ BROWSE            RIRI.PDSEGEN.EXEC                     Row 0000001 of 0000016 
+ Command ===>                                                  Scroll ===> CSR  
+            Name     Prompt       Size   Created          Changed          ID   
+ _________ GNAME                    63  2016/07/30  2017/10/05 07:51:00  PDSE   
+ _________ PDSEGBAK                849  2016/07/14  2022/11/09 14:56:04  PDSE   
+ _________ PDSEGCMD                136  2020/10/20  2022/11/09 14:54:46  PDSE   
+ _________ PDSEGCPR                285  2016/09/27  2023/03/18 13:52:52  PDSE   
+ _________ PDSEGDSL                502  2020/07/25  2022/06/03 11:18:55  PDSE   
+ _________ PDSEGEN                7075  2021/02/23  2024/01/04 08:54:00  PDSE   
+ _________ PDSEGENC                869  2016/07/18  2022/11/10 10:16:00  PDSE   
+ _________ PDSEGENM                303  2016/06/02  2023/03/08 14:30:19  PDSE   
+ _________ PDSEGENS                198  2016/06/27  2024/06/29 07:05:51  PDSE   
+ _________ PDSEGENX                 41  2016/06/20  2024/11/15 12:49:08  IBMUSER
+ _________ PDSEGFND                178  2016/08/02  2022/10/26 13:15:40  PDSE   
+ _________ PDSEGRST                391  2017/09/22  2021/02/23 02:07:00  PDSE   
+ _________ PDSEGVAL                133  2016/08/01  2017/11/06 10:01:00  PDSE   
+ _________ PDSEGVER                 29  2021/02/23  2024/01/04 08:54:05  PDSE   
+ _________ PG                        3  2016/06/24  2017/06/14 12:01:00  PDSE   
+ _________ TRYIT                  1079  2017/06/20  2023/07/09 12:57:37  PDSE   
+           **End**                                                              
+
+
+PDSEGENX :    HACER EX.
+
+
+
+
+
+/////////////////
+
+
+
+AUTOMATIC RESTART MANAGER, EXPLICACION Y EJEMPLO
+
+
+
+El **Automatic Restart Manager (ARM)** es una funcionalidad del sistema operativo z/OS diseñada para reiniciar automáticamente los recursos críticos (como trabajos, subsistemas, o sistemas completos) después de una falla. Esto ayuda a reducir el tiempo de inactividad y garantizar la alta disponibilidad en los entornos mainframe.
+
+---
+
+### **¿Cómo funciona el ARM?**
+
+1. **Definición de políticas:**
+   - ARM opera basado en políticas definidas por los administradores del sistema. Estas políticas describen qué recursos deben reiniciarse, en qué orden, y en qué circunstancias.
+
+2. **Registro de recursos:**
+   - Las aplicaciones y subsistemas críticos se registran en ARM. Esto puede incluir **IMS**, **CICS**, **DB2**, y otras aplicaciones que soporten la integración con ARM.
+
+3. **Monitoreo de recursos:**
+   - ARM monitorea los recursos registrados. Si detecta que un recurso ha fallado, se inicia un proceso de reinicio según la política establecida.
+
+4. **Reinicio automático:**
+   - Dependiendo de la configuración, ARM puede reiniciar un recurso en el mismo sistema o en otro dentro de un sysplex (si está configurado para ello).
+
+5. **Soporte para Sysplex:**
+   - En entornos paralelos (como un sysplex), ARM puede reiniciar recursos en otros sistemas para minimizar el impacto de una falla.
+
+---
+
+### **Elementos clave del ARM**
+
+- **Resiliencia:** ARM reinicia automáticamente los recursos sin intervención manual.
+- **Coordinación:** En un sysplex, ARM asegura que los recursos reiniciados sean consistentes con el resto del sistema.
+- **Escalabilidad:** Soporta desde aplicaciones simples hasta subsistemas complejos.
+- **Políticas personalizadas:** Los administradores pueden definir cómo y cuándo deben reiniciarse los recursos.
+
+---
+
+### **Ejemplo: Configuración básica del ARM**
+
+#### **Paso 1: Definir una política ARM**
+En el **Sysplex Couple Data Set (CDS)**, se define una política ARM que describe los recursos y sus prioridades de reinicio.
+
+```plaintext
+POLICY MYARMPOLICY
+   NAME(DB2A) TYPE(SUBSYS) RESTART_DELAY(30)
+   NAME(CICSA) TYPE(SUBSYS) RESTART_DELAY(20)
+END
+```
+- **`NAME(DB2A)` y `NAME(CICSA)`**: Nombres de los recursos registrados.
+- **`TYPE(SUBSYS)`**: Indica que son subsistemas.
+- **`RESTART_DELAY`**: Tiempo de espera antes de intentar el reinicio.
+
+---
+
+#### **Paso 2: Registro de aplicaciones con ARM**
+Los recursos deben registrarse explícitamente con ARM usando APIs o configuraciones específicas.
+
+Ejemplo de registro desde un subsistema:
+```plaintext
+ARMREQ REGISTER NAME(DB2A) TYPE(SUBSYS)
+```
+
+---
+
+#### **Paso 3: Verificar el estado de ARM**
+Se puede usar el comando **D ARM** en la consola del sistema para verificar qué recursos están registrados y su estado.
+
+```plaintext
+D ARM,STATUS
+```
+
+---
+
+### **Beneficios del ARM**
+
+1. **Alta disponibilidad:** Minimiza el impacto de fallas al reiniciar automáticamente los recursos críticos.
+2. **Integración sysplex:** Garantiza continuidad operativa en entornos de alta disponibilidad.
+3. **Gestión automatizada:** Reduce la dependencia en la intervención manual.
+4. **Flexibilidad:** Permite personalizar las políticas de reinicio para distintos entornos y aplicaciones.
+
+---
+
+### **Ejemplo práctico**
+
+Supongamos un sistema donde se ejecutan los subsistemas DB2 e IMS. Si uno de estos subsistemas falla:
+
+1. **Detección:** ARM detecta la falla del subsistema (DB2, por ejemplo).
+2. **Aplicación de política:** ARM consulta la política y determina que debe intentar un reinicio en el mismo sistema después de un retraso de 30 segundos.
+3. **Reinicio automático:** ARM ejecuta los comandos necesarios para reiniciar DB2.
+4. **Notificación:** ARM registra la acción en los logs del sistema y notifica al operador.
+
+---
+
+### **Conclusión**
+El **Automatic Restart Manager (ARM)** es una herramienta poderosa para garantizar la continuidad operativa en mainframes z/OS. Mediante políticas configurables y un monitoreo constante, ARM permite minimizar interrupciones y administrar eficazmente los recursos críticos en caso de fallas, siendo especialmente útil en entornos de alta disponibilidad como un sysplex.
+
+
+
+
+//////////////////////
+
+
+
+
+JES2
+
+
+FEU.Z25B.PARMLIB(JES2PARM)
+
+
+
+//////////////////
+
+
+
+*****************
+
+
+CLASE 20/11/2024
+
+
+COMANDOS.
+
+CONSOLA ASIGNADA AL SISTEMA O A CADA LPAR.
+
+
+COMANDO SDSF Y LUEGO SP :  SPOOL VOLUMES (INDICA COMO ESTA EL JES2)
+
+
+COMANDO AUTOMATICO
+
+/$TA A005, I=120, '$VS, ''D T'''
+
+INDICA : SET AUTOMATIC PARA EJECUTAR EL DISPLAY TIME.
+A005     ES LIBRE PERO DE 4 POSICIONES (NO TIENE QUE SER REPETITIVO)
+
+
+COMANDO :  /$CA,ALL     PARA CANCELAR
+
+
+/$TA, ALL     PARA VER TODOS LOS COMANDOS ESTABLECIDOS
+
+
+COMANDO : /$CA A005     PARA CANCELAR EL COMANDO ESPECIFICO.
+
+
+
+COMANDO PARA SUBMITIR :  
+
+
+USER.Z25B.PROCLIB(SUBMITE)
+
+
+/$TA A005,I=600, '$VS, '' S SUBMITE,M=IEFBR14'''
+
+
+RIR.LYB(LISTCAT)
+
+
+$TA A010, I=600, '$VS, ''S SUBMITE,M=LISTCAT'''
+
+
+/$TA CALL
+
+
+
+
+//////////////
+
+
+PDSEGEN:
+--------
+
+LINK DE GITHUB :
+
+
+https://github.com/lbdyck/pdsegen
+
+
+
+/////////////
+
+
+
+COMANDOS DEL J2
+
+
+https://ibmredbooks.github.io/zikipedia/references
+
+
+
+///////////////
+
+
+
+DUMP DINAMICO
+
+
+El **Dump Dinámico** es una funcionalidad en los sistemas mainframe, como z/OS, que permite capturar información de diagnóstico sobre el estado del sistema o una aplicación en el momento de un problema (por ejemplo, un error o un fallo). Es "dinámico" porque se puede invocar en tiempo de ejecución sin necesidad de reiniciar o alterar configuraciones previas del sistema.
+
+
+### Características del Dump Dinámico
+
+1. **Flexibilidad:** Permite seleccionar qué información capturar (puede ser sobre una tarea específica, un programa, o toda una región del sistema).
+2. **Minimiza impacto:** Genera el volcado solo cuando ocurre una condición específica (por ejemplo, un abend).
+3. **Configuración específica:** Puedes definir qué áreas de memoria y tareas incluir, lo cual reduce el tamaño del dump y facilita su análisis.
+4. **Comandos y configuraciones:** Se activa utilizando herramientas como los comandos `DUMP` o JCL, o puede estar preconfigurado mediante exit routines o herramientas de monitoreo como IPCS o SLIP.
+
+---
+
+### Ejemplo de Uso del Dump Dinámico
+
+
+#### 1. **Configuración usando SLIP**
+
+El comando SLIP (System Level Intercept Program) es común para configurar un dump dinámico. Supongamos que queremos capturar un dump cuando ocurra un abend específico.
+
+**Comando SLIP:**
+```plaintext
+SLIP SET,COMP=0C4,ACTION=DUMP,JOBNAME=TESTJOB,END
+```
+
+- `COMP=0C4`: Captura el dump si ocurre un error con el código de abend 0C4.
+- `ACTION=DUMP`: Indica que se genere un dump.
+- `JOBNAME=TESTJOB`: Aplica solo al trabajo llamado "TESTJOB".
+- `END`: Finaliza el comando.
+
+
+#### 2. **Visualización y Análisis**
+
+Cuando ocurre el evento, el dump se genera en un dataset definido en el sistema (por ejemplo, un SYS1.DUMPxx). Luego, se puede analizar utilizando IPCS (Interactive Problem Control System).
+
+**Comando IPCS para analizar el dump:**
+```plaintext
+IPCS
+ANALYZE
+```
+
+---
+
+### Ejemplo en JCL
+Un dump dinámico también se puede solicitar desde un trabajo en JCL. Aquí hay un ejemplo básico para capturar un dump de un programa que genera un error:
+
+```jcl
+//DUMPTEST JOB (ACCT),'TEST DUMP',CLASS=A,MSGCLASS=H
+//STEP01   EXEC PGM=TESTPROG
+//         DD SYSUDUMP
+//SYSABEND DD SYSOUT=*
+//SYSMDUMP DD DISP=(NEW,CATLG),UNIT=SYSDA,
+//         SPACE=(CYL,(10,5)),DSN=MY.DUMP.DATA
+```
+
+- `SYSUDUMP`: Captura un dump básico del programa.
+- `SYSABEND`: Proporciona un dump más detallado con información del estado de memoria.
+- `SYSMDUMP`: Un dump binario completo, ideal para diagnóstico avanzado con IPCS.
+
+---
+
+### Beneficios del Dump Dinámico
+
+- Ayuda a diagnosticar problemas sin detener el sistema.
+- Reduce el esfuerzo manual al configurar capturas detalladas.
+- Se integra bien con herramientas como SLIP, IPCS o herramientas externas.
+
+
+### Desventajas
+
+- Puede generar archivos grandes si no se configura adecuadamente.
+- El análisis del dump requiere conocimientos técnicos avanzados.
+
+Este mecanismo es vital para equipos de soporte y administradores de sistemas en mainframes, ya que permite investigar y resolver problemas rápidamente.
+
+
+
+SYS.NUCLEUS  :   ESTA EN EL VOLUMEN RES1
+
+IEANS011
+
+
+Command - Enter "/" to select action                  Message           Volume
+------------------------------------------------------------------------------
+         SYS1.NUCLEUS                                                   B5RES1
+***************************** End of Data Set list ***************************
+
+
+
+UBICACION DE LAS LOAD
+
+
+SYS1.IPLPARM
+
+/D IPLINFO    :  NOS DA LA LOAD QUE USO Y DONDE ESTA.
+
+
+SDSF STATUS DISPLAY ALL CLASSES                         COMMAND I
+COMMAND INPUT ===>                                            SCR
+RESPONSE=S0W1                                                    
+ IEE254I  09.01.34 IPLINFO DISPLAY 789                           
+  SYSTEM IPLED AT 12.00.29 ON 10/21/2024                         
+  RELEASE z/OS 02.05.00    LICENSE = z/OS                        
+  USED LOADCS IN SYS1.IPLPARM ON 00A82                           
+  ARCHLVL = 2   MTLSHARE = N                                     
+  IEASYM LIST = 00                                               
+  IEASYS LIST = CS (OP)                                          
+  IODF DEVICE: ORIGINAL(00A82) CURRENT(00A82)                    
+  IPL DEVICE: ORIGINAL(00A80) CURRENT(00A80) VOLUME(B5RES1)      
+
+
+SYS1.IPLPARM(LOADCS)
+
+
+
+IPL :
+
+
+
+El **IPL (Initial Program Load)** es el proceso de arranque o reinicio de un sistema mainframe z/OS. Durante el IPL, el sistema carga el núcleo operativo (kernel) y otros componentes necesarios desde un dispositivo de almacenamiento (generalmente un disco o DASD) a la memoria del sistema, y lo prepara para ejecutar aplicaciones y procesos. Es equivalente al "boot" en otros sistemas operativos.
+
+---
+
+### **¿Cuándo se realiza un IPL?**
+
+1. **Inicio del sistema:** Cuando se enciende un mainframe.
+2. **Reinicio:** Después de realizar actualizaciones de software o hardware.
+3. **Recuperación:** Cuando ocurre un error crítico y se necesita reiniciar el sistema.
+4. **Mantenimiento:** Para aplicar configuraciones o activar un nuevo núcleo de z/OS.
+
+---
+
+### **Pasos del IPL**
+
+1. **Cargar el núcleo operativo:**
+
+   - El sistema carga el programa residente inicial (residente program) desde el dispositivo especificado (como un volumen SYSRES).
+2. **Configurar dispositivos y subsistemas:**
+   - Se inicializan dispositivos de E/S, consolas, y particiones lógicas (LPARs).
+3. **Activar componentes del sistema:**
+   - Se activan subsistemas como JES2/JES3, RACF y otros.
+4. **Inicio de operaciones:**
+   - Una vez completado, el sistema queda listo para recibir trabajos y ejecutar aplicaciones.
+
+---
+
+### **Tipos de IPL**
+
+1. **Cold Start (Arranque frío):** Reinicia todo el sistema, incluyendo dispositivos de entrada/salida y subsistemas.
+2. **Warm Start (Arranque cálido):** Conserva algunos datos en memoria, como trabajos en cola en JES.
+3. **Quick Start (Arranque rápido):** Similar al warm start, pero con configuraciones aún más limitadas.
+
+---
+
+### **Ejemplo de IPL**
+
+El IPL se controla desde la consola del operador, utilizando comandos como `LOAD`, `START`, o desde el Hardware Management Console (HMC).
+
+#### Ejemplo básico:
+1. **Seleccionar el volumen para el IPL en el HMC:**
+   - Selecciona el volumen SYSRES donde está el núcleo operativo.
+2. **Ingresar el comando en la consola del operador:**
+   ```plaintext
+   IPL 0A80
+   ```
+   - `0A80` es la dirección del dispositivo (DASD) donde reside el sistema operativo.
+
+3. **Verificar el progreso:**
+
+   - La consola mostrará mensajes indicando el avance del IPL y los subsistemas que se están inicializando.
+
+---
+
+### **Ejemplo con configuración en un parámetro LOAD:**
+Algunas configuraciones específicas se pueden definir para modificar el comportamiento del IPL.
+
+```plaintext
+LOAD 0A80,PARM=CLPA
+```
+
+- `0A80`: Dirección del dispositivo desde donde se cargará el sistema operativo.
+- `PARM=CLPA`: Indica que se debe limpiar el contenido de la **Link Pack Area** (LPA), una región en memoria donde se almacenan módulos compartidos.
+
+---
+
+### **Comandos relacionados con el IPL**
+1. **DISPLAY IPLINFO:**
+   Muestra información sobre el último IPL realizado.
+   ```plaintext
+   D IPLINFO
+   ```
+2. **DISPLAY LOADPARM:**
+   Muestra los parámetros utilizados en el IPL.
+   ```plaintext
+   D LOADPARM
+   ```
+3. **RESET SYSTEM:**
+   Realiza un reinicio suave del sistema (preparación para el IPL).
+
+---
+
+### **Beneficios del IPL**
+- Permite aplicar actualizaciones críticas de software o hardware.
+- Limpia errores acumulados en la memoria del sistema.
+- Reinicia los subsistemas para resolver problemas de rendimiento o estabilidad.
+
+---
+
+### **Desventajas del IPL**
+- Implica tiempo de inactividad.
+- Si no se planifica adecuadamente, puede causar interrupciones a usuarios o aplicaciones.
+
+El IPL es una operación crítica y debe ejecutarse bajo la supervisión de personal técnico con experiencia, especialmente en sistemas que manejan operaciones empresariales de alta disponibilidad.
+
+
+
+
+ BROWSE    SYS1.IPLPARM(LOADCS) - 01.23             Line 0000000000 
+ Command ===>                                                  Scrol
+********************************* Top of Data **********************
+IODF     99 SYS1                                                    
+INITSQA  0000M 0008M                                                
+SYSCAT   B5SYS1113CCATALOG.Z25B.MASTER                              
+SYSPARM  CS                                                         
+IEASYM   00                                                         
+PARMLIB  USER.Z25B.PARMLIB                            B5CFG1        
+PARMLIB  FEU.Z25B.PARMLIB                             B5CFG1        
+PARMLIB  ADCD.Z25B.PARMLIB                            B5SYS1        
+PARMLIB  SYS1.PARMLIB                                 B5RES1        
+NUCLEUS  1                                                          
+SYSPLEX  ADCDPL                                                     
+******************************** Bottom of Data ********************
+
+
+IASYS LIST = CS (OP)
+
+
+
+IMPORTANCIA DEL AUTOIPL
+
+
+/D U,VOL=
+
+
+
+
+
+EXPLICACION DEL MIEMBRO LOADXX
+
+
+
+https://www.ibm.com/docs/en/zos/2.5.0?topic=sets-statements-parameters-loadxx
+
+
+
+
+
+### **¿Qué son los Multilevel Alias en un mainframe?**
+
+Los **Multilevel Alias** son una característica del sistema de archivos de z/OS que permite asignar nombres alias (nombres alternativos) a datasets catalogados. Esta capacidad es particularmente útil en entornos donde se requiere flexibilidad para acceder a datasets con diferentes niveles de jerarquía o para gestionar transiciones de nombres.
+
+Un alias multilevel no se limita a representar un único dataset o catálogo; en cambio, puede redirigir dinámicamente a datasets que pertenecen a distintas divisiones jerárquicas (niveles) del sistema de archivos. Esto permite resolver problemas de administración de nombres y facilita la compatibilidad entre entornos o aplicaciones que manejan estructuras complejas de nombres de datasets.
+
+---
+
+### **Ventajas de los Multilevel Alias**
+
+1. **Flexibilidad en los nombres:**
+   - Permite definir nombres lógicos que pueden mapearse dinámicamente a datasets físicos.
+   
+2. **Compatibilidad y migración:**
+   - Facilita la migración de aplicaciones, ya que los nombres de los datasets pueden permanecer constantes mientras se modifican físicamente.
+
+3. **Gestión simplificada:**
+   - Ayuda a los administradores a consolidar estructuras de nombres complejas, apuntando múltiples niveles a un solo alias.
+
+4. **Mejora en la administración de catálogos:**
+   - Reduce la dependencia de la ubicación física al trabajar con sistemas distribuidos o jerárquicos.
+
+---
+
+### **Ejemplo de uso**
+
+#### Escenario:
+Supongamos que tienes datasets en diferentes jerarquías para un sistema financiero, por ejemplo:
+
+- `FINANCE.Q1.REPORT`
+- `FINANCE.Q2.REPORT`
+- `FINANCE.Q3.REPORT`
+- `FINANCE.Q4.REPORT`
+
+En lugar de utilizar los nombres completos de los datasets, puedes definir un alias como `FINANCE.REPORT` que apunte dinámicamente al dataset correspondiente dependiendo del trimestre actual.
+
+---
+
+#### Implementación:
+
+1. **Crear el alias multilevel:**
+
+   Utiliza el comando IDCAMS para definir un alias que apunte al dataset apropiado en el catálogo:
+
+   ```jcl
+   //DEFINEAL JOB (ACCT),'DEFINE ALIAS',CLASS=A,MSGCLASS=H
+   //STEP01   EXEC PGM=IDCAMS
+   //SYSPRINT DD SYSOUT=*
+   //SYSIN    DD *
+      DEFINE ALIAS (NAME(FINANCE.REPORT) -
+            RELATE(FINANCE.Q1.REPORT))
+   /*  
+   ```
+
+   En este caso, `FINANCE.REPORT` es el alias y se relaciona con `FINANCE.Q1.REPORT`.
+
+
+2. **Acceso dinámico:**
+
+   Ahora puedes usar `FINANCE.REPORT` para referenciar el dataset `FINANCE.Q1.REPORT` sin necesidad de usar el nombre completo.
+
+
+3. **Actualizar el alias para otros niveles:**
+
+   Cuando se necesita cambiar al siguiente trimestre, puedes redefinir el alias:
+
+   ```jcl
+   //UPDATEAL JOB (ACCT),'UPDATE ALIAS',CLASS=A,MSGCLASS=H
+   //STEP01   EXEC PGM=IDCAMS
+   //SYSPRINT DD SYSOUT=*
+   //SYSIN    DD *
+      DEFINE ALIAS (NAME(FINANCE.REPORT) -
+            RELATE(FINANCE.Q2.REPORT) REPLACE)
+   /*
+   ```
+
+---
+
+### **Limitaciones de los Multilevel Alias**
+
+1. **Requiere catálogos VSAM:** Los alias solo funcionan con datasets catalogados.
+2. **No cambia atributos del dataset:** El alias solo es un apuntador y no afecta los atributos o propiedades del dataset.
+3. **No soporta datasets uncataloged:** Si un dataset no está catalogado, no puede ser referenciado por un alias.
+
+---
+
+### **Conclusión**
+
+Los **Multilevel Alias** son una herramienta poderosa en z/OS para simplificar el manejo de nombres de datasets, mejorar la flexibilidad y facilitar la migración o la interoperabilidad entre diferentes entornos. Mediante el uso de comandos como `DEFINE ALIAS`, los administradores pueden centralizar y simplificar el acceso a datos, manteniendo la robustez y escalabilidad que caracterizan a los sistemas mainframe.
+
+
+
+///////////////
+
+
+HCD
+
+
+### **¿Qué es el HCD (Hardware Configuration Definition) en mainframe?**
+
+El **HCD (Hardware Configuration Definition)** es una herramienta integrada en z/OS que permite definir y gestionar configuraciones de hardware y su interacción con el sistema operativo. Es fundamental para la administración de entornos de mainframe, ya que simplifica la creación y mantenimiento de configuraciones de hardware, lo que incluye procesadores, canales, dispositivos y unidades de control.
+
+El HCD trabaja junto con el HMC (Hardware Management Console) y el IODF (Input/Output Definition File) para asegurar que la configuración de hardware esté alineada con las necesidades operativas y de negocio.
+
+---
+
+### **Funciones del HCD**
+
+1. **Definición de hardware:**
+   - Permite configurar procesadores, canales, unidades de control y dispositivos como impresoras, discos y cintas.
+
+2. **Generación de IODF:**
+   - Crea y mantiene el archivo de definición de entrada/salida (IODF), que el sistema operativo utiliza durante el IPL para inicializar el hardware.
+
+3. **Gestión de configuraciones múltiples:**
+   - Soporta configuraciones de hardware dinámicas, lo que permite cambios sin necesidad de reiniciar el sistema.
+
+4. **Verificación de consistencia:**
+   - Asegura que la configuración sea válida, evitando errores de hardware o conectividad.
+
+5. **Integración con el sistema operativo:**
+   - Simplifica la interacción entre el hardware y el z/OS mediante interfaces gráficas y comandos interactivos.
+
+---
+
+### **Componentes principales**
+
+1. **IODF (Input/Output Definition File):**
+   Archivo que contiene la definición de hardware y es utilizado por el sistema operativo durante el IPL.
+
+2. **HCM (Hardware Configuration Manager):**
+   Herramienta gráfica opcional que complementa al HCD para administrar configuraciones de hardware.
+
+3. **IOCP (Input/Output Configuration Program):**
+   Lenguaje utilizado para describir configuraciones de hardware y generar el IODF.
+
+---
+
+### **Pasos para usar HCD**
+
+#### 1. **Acceso al HCD**
+   En ISPF (Interactive System Productivity Facility), accede al panel del HCD:
+
+   - Opción de menú: `ISPF -> Option H (para HCD)`
+   - Comando: `TSO HCD`
+
+#### 2. **Crear o modificar un IODF**
+   Desde el menú principal del HCD, selecciona la opción para crear o modificar un archivo IODF:
+
+   ```plaintext
+   Option 1. Define, modify, or view IODFs
+   ```
+
+#### 3. **Definir configuración de hardware**
+   Define los siguientes componentes:
+   - **Procesadores:** Agrega LPARs y procesadores físicos.
+   - **Canales:** Configura tipos de canales como ESCON, FICON, etc.
+   - **Unidades de control:** Especifica la conectividad de dispositivos al hardware.
+   - **Dispositivos:** Configura discos, cintas, impresoras, entre otros.
+
+#### 4. **Validación**
+   Verifica que la configuración sea válida. HCD proporciona herramientas para detectar errores de conectividad o configuraciones inválidas.
+
+#### 5. **Generar y activar el IODF**
+   - Genera el archivo IODF para que sea utilizado durante el próximo IPL.
+   - Opcionalmente, activa cambios dinámicos de hardware sin necesidad de reiniciar el sistema.
+
+---
+
+### **Ejemplo: Configurar un nuevo dispositivo de disco**
+
+1. **Agregar unidad de control:**
+   En el HCD, define una unidad de control para el dispositivo, especificando:
+   - Tipo de unidad de control.
+   - Canales asignados.
+
+2. **Agregar dispositivo:**
+   Enlaza el dispositivo al hardware, definiendo:
+   - Tipo de dispositivo (por ejemplo, `3390`).
+   - Direcciones de dispositivo.
+
+3. **Validar configuración:**
+   Usa la opción de validación para asegurarte de que no hay conflictos.
+
+4. **Guardar y generar el IODF:**
+   Guarda los cambios y genera el IODF actualizado.
+
+---
+
+### **Comando para listar el IODF activo**
+
+Puedes listar el IODF activo con el comando:
+```plaintext
+D IPLINFO
+```
+
+Esto mostrará información sobre el IODF utilizado actualmente por el sistema.
+
+---
+
+### **Ventajas del HCD**
+
+1. **Simplificación:**
+   - Elimina la necesidad de editar manualmente el IOCP.
+
+2. **Interfaz intuitiva:**
+   - Ofrece una interfaz gráfica y basada en menús para facilitar la administración.
+
+3. **Soporte para cambios dinámicos:**
+   - Permite actualizar configuraciones sin reiniciar el sistema en muchos casos.
+
+4. **Consistencia:**
+   - Asegura que las configuraciones de hardware sean válidas antes de aplicarlas.
+
+---
+
+### **Conclusión**
+
+El HCD es una herramienta esencial para los administradores de sistemas mainframe, ya que facilita la definición y gestión de hardware de manera centralizada. Su capacidad para generar y validar configuraciones asegura un entorno estable y optimizado para la operación diaria del mainframe.
+
+
+
+
+En **HCD (Hardware Configuration Definition)**, no hay un comando directo específico para hacer un **display** en el sentido tradicional de un comando de línea como en TSO/ISPF. Sin embargo, puedes obtener información y realizar tareas de visualización de configuraciones a través del panel interactivo de HCD o mediante comandos del sistema asociados con configuraciones de hardware.
+
+### **Opciones para obtener información con HCD**
+
+1. **Acceder al menú HCD en ISPF:**
+   Puedes acceder a la opción de visualización de configuraciones desde el menú principal del HCD. Aquí están los pasos generales:
+   - Entra al HCD con el comando: 
+     ```
+     TSO HCD
+     ```
+   - Selecciona la opción **"Display or print configuration data"** para mostrar configuraciones de hardware y dispositivos.
+
+2. **Visualizar información del IODF:**
+   Desde el menú principal del HCD, selecciona:
+   ```plaintext
+   Option 5. Display or print configuration
+   ```
+   Esto te permitirá ver detalles sobre procesadores, canales, dispositivos, y unidades de control configuradas.
+
+---
+
+### **Comandos relacionados fuera del HCD**
+
+Si ya tienes configuraciones activas o deseas consultar detalles específicos, puedes usar comandos del sistema z/OS que interactúan con la configuración del hardware:
+
+#### **1. Comando para verificar el IODF activo:**
+   ```plaintext
+   D IPLINFO
+   ```
+   Este comando muestra el IODF actualmente utilizado por el sistema.
+
+#### **2. Comando para listar dispositivos activos:**
+   ```plaintext
+   D U,,,ALL
+   ```
+   Esto muestra una lista de dispositivos activos en el sistema.
+
+#### **3. Comando para verificar unidades de control y canales:**
+   ```plaintext
+   D M=CHP
+   ```
+   Muestra el estado de los canales configurados.
+
+#### **4. Comando para consultar rutas activas hacia dispositivos:**
+   ```plaintext
+   D PATH(dev_address)
+   ```
+   Reemplaza `dev_address` por la dirección específica del dispositivo.
+
+---
+
+### **Ejecución de displays dinámicos en HCD**
+
+Si necesitas visualizar configuraciones específicas desde HCD:
+- Puedes navegar a las opciones de **Devices** o **Control Units** en el menú HCD.
+- Seleccionar el dispositivo o componente deseado para inspeccionar su configuración.
+
+---
+
+### **Conclusión**
+Aunque el HCD no utiliza directamente un comando "DISPLAY", su interfaz interactiva te permite acceder a configuraciones detalladas. Adicionalmente, los comandos del sistema como `D IPLINFO`, `D U,,,ALL`, y `D PATH` complementan la administración y visualización de configuraciones activas.
+
+
+
+
+
+En el menú del **HCD** que compartes, el **display** de configuraciones específicas se realiza mediante la **opción 1**: 
+
+```plaintext
+1. Define, modify, or view configuration data
+```
+
+### Pasos para hacer un **display** en HCD:
+
+1. **Selecciona la opción 1**:
+   - Escribe `1` en el campo de selección y presiona `Enter`.
+
+2. **Elige el tipo de configuración que deseas ver**:
+   En el submenú que aparece después, puedes seleccionar lo que quieres consultar o modificar, como:
+   - Procesadores
+   - Canales
+   - Unidades de control
+   - Dispositivos
+   - Conexiones y puertos
+
+   Por ejemplo, si deseas visualizar los dispositivos definidos, selecciona **Devices**.
+
+3. **Ver detalles específicos**:
+   - Al elegir una categoría, verás una lista de los elementos configurados en el IODF activo.
+   - Puedes seleccionar un elemento de la lista para ver sus atributos y detalles.
+
+---
+
+### Comandos adicionales en HCD para visualizar configuraciones
+
+Dentro de esta opción de edición y visualización (`Option 1`), hay subcomandos específicos para interactuar con las configuraciones. Por ejemplo:
+
+- **Listar elementos:** 
+  Muestra todos los elementos configurados en una categoría seleccionada, como dispositivos o canales.
+
+- **Visualizar detalles:** 
+  Desde la lista, selecciona un elemento (usualmente presionando `Enter` sobre la línea correspondiente) para ver su configuración completa.
+
+---
+
+### Uso de otras opciones del menú principal
+
+- **Opción 4 (Gráficos):**
+  La opción **"Create or view graphical configuration report"** también puede generar un informe visual detallado de la configuración, útil para documentación o auditorías.
+
+- **Opción 7 (Query hardware):**
+  Permite consultar el hardware soportado y los módulos de información de usuario (UIMs) instalados, lo cual es útil para validaciones técnicas.
+
+---
+
+### Conclusión
+
+El **display** en el contexto del menú del HCD se realiza principalmente a través de la **opción 1**, donde puedes navegar, listar y visualizar configuraciones específicas almacenadas en el IODF activo. Si necesitas un informe más estructurado o una vista gráfica, las opciones **4** o **3** son complementarias.
+
+
+
+
+ADCD.Z25B.PARMLIB(COMMNDCS)
+
+
+ BROWSE    ADCD.Z25B.PARMLIB(COMMNDCS) - 01.25      Line 000000
+ Command ===>                                                  
+********************************* Top of Data *****************
+COM='S JES2,PARM='COLD,NOREQ''                                 
+COM='S VLF,SUB=MSTR'                                           
+COM='S HZR,SUB=MSTR'                                           
+COM='S VTAM'                                                   
+COM='S VTAM00'                                                 
+COM='S DLF,SUB=MSTR'                                           
+COM='DD ADD,VOL=B5SYS1'                                        
+COM='DD NAME=SYS1.&SYSNAME..&SYSVER..DMP&SEQ'                  
+COM='DD ALLOC=ACTIVE'                                          
+******************************** Bottom of Data ***************
+
+INFORMACION
+
+VOLUMEN DE LOS DUMP
+
+
+
+
+FEU.Z25B.PARMLIB(IEASYSCS)
+
+
+
+************************
+
+
+CLASE 21/11/2024
+
+
+CONTINUA UNIT INITIALIZATION.
+
+
+LOG DEL IPL REALIZADO :
+
+
+SYS1.SOW1.LOGREC
+
+
+
+
+
+
+
+
+PROCESO DE IPL :  QUE MIRAR Y DONDE
+
+
+Un IPL (Initial Program Load) en un mainframe es un proceso crítico que reinicia el sistema operativo z/OS y lo pone en funcionamiento. Durante un IPL, hay varios puntos importantes que observar para asegurarse de que el sistema se inicie correctamente. Aquí tienes las cosas clave a observar y dónde hacerlo:
+
+---
+
+### **1. Verificación del Hardware y Consolas:**
+
+- **Estado del hardware:** Asegúrate de que todos los componentes físicos, como discos, controladores de canales, y procesadores, estén en buen estado.
+  - **Dónde observar:** Consola HMC (Hardware Management Console).
+- **Mensajes de diagnóstico:** Observa los mensajes iniciales para detectar errores en hardware o configuraciones.
+  - **Dónde observar:** Consola HMC o consola del operador.
+
+---
+
+### **2. Inicio del IPL y Selección del LOADPARM:**
+
+- **LOADPARM:** Asegúrate de usar el parámetro de carga correcto, que define qué SYSRES (volumen del sistema) y núcleo del sistema operativo cargar.
+  - **Dónde observar:** En la HMC durante la configuración inicial.
+
+---
+
+### **3. Configuración del Núcleo (PARMLIB):**
+
+- Asegúrate de que los miembros en el dataset `SYS1.PARMLIB` sean los correctos, especialmente:
+  - `IEASYSxx` (indicador del sistema).
+  - `IEAOPTxx` (opciones de optimización).
+  - `PROGxx` (definición de módulos de programas).
+- **Dónde observar:** Consola del operador para mensajes relacionados con parámetros erróneos.
+
+---
+
+### **4. Mensajes de Consola del Operador:**
+
+- **Mensajes clave:** 
+  - Mensajes como `IEE254I` indican que un sistema está listo para aceptar comandos.
+  - Mensajes de error (`IEF***` o `IEA***`) que requieran intervención.
+- **Dónde observar:** Consola del operador o consola lógica de z/OS (log del sistema).
+
+---
+
+### **5. Verificación de Datasets Críticos:**
+
+- **Verificar datasets clave como:**
+  - `SYS1.LINKLIB`, `SYS1.PROCLIB`, `SYS1.MANx` (managers de logs del sistema).
+  - Logs de sistema activados en `SYS1.LOGREC`.
+- **Dónde observar:** Consola del operador o herramientas como SDSF.
+
+---
+
+### **6. Verificación de los Subsistemas:**
+
+- **IMS, DB2, CICS y JES2/JES3:** Confirma que los subsistemas se inicien sin errores.
+  - **Mensajes:** Observa que no haya errores como `IEF196I` en los subsistemas.
+  - **Dónde observar:** Consola del operador, SDSF o mensajes del sistema.
+
+---
+
+### **7. JES2/JES3 y el Estado de la Cola de Trabajos:**
+
+- **Estado de JES:** Asegúrate de que JES esté activo y los spoolers estén en línea.
+- **Dónde observar:** Consola del operador (`$HASP373` para trabajos activos).
+
+---
+
+### **8. Probar Accesos y Conectividad:**
+
+- Prueba TSO, acceso a datasets, y conectividad de red (VTAM/TCPIP).
+- **Dónde observar:** Consola lógica de z/OS, TSO/ISPF y comandos de diagnóstico.
+
+---
+
+### **9. Verificación de Logs del Sistema:**
+
+- **SMF (System Management Facility):** Revisa los registros para asegurarte de que la recolección de estadísticas esté activa.
+- **Dónde observar:** Herramientas como SDSF o analizadores de SMF.
+
+---
+
+### **10. Registro de Mensajes de Error:**
+
+- Captura y analiza cualquier mensaje que pueda indicar un problema (como IEA, IEF, o ABENDs).
+- **Dónde observar:** SDSF, consola del operador o herramientas de análisis de logs.
+
+---
+
+### **11. Notificación y Documentación:**
+
+- Notifica al equipo relevante que el sistema está en funcionamiento.
+- Documenta cualquier anomalía detectada durante el proceso.
+
+---
+
+Estas observaciones y verificaciones son esenciales para un IPL exitoso y para minimizar cualquier tiempo de inactividad o errores posteriores.
+
+
+
+RIRI.LYB(ZFS$DOS)
+
+
+ BROWSE    SYS1.IPLPARM(LOADCS) - 01.24             Line 0000000000 C
+ Command ===>                                                  Scroll
+********************************* Top of Data ***********************
+IODF     99 SYS1                                                     
+INITSQA  0000M 0008M                                                 
+SYSCAT   B5SYS1133CCATALOG.Z25B.MASTER                               
+SYSPARM  CS                                                          
+IEASYM   00                                                          
+PARMLIB  USER.Z25B.PARMLIB                            B5CFG1         
+PARMLIB  FEU.Z25B.PARMLIB                             B5CFG1         
+PARMLIB  ADCD.Z25B.PARMLIB                            B5SYS1         
+PARMLIB  SYS1.PARMLIB                                 B5RES1         
+NUCLEUS  1                                                           
+SYSPLEX  ADCDPL                                                      
+******************************** Bottom of Data *********************
+
+
+
+
+ BROWSE    FEU.Z25B.PARMLIB(IEASYSCS) - 01.11       Line 0000000000 Col 001
+ Command ===>                                                  Scroll ===> 
+********************************* Top of Data *****************************
+CLOCK=00,                     CLOCKxx                                      
+CLPA,                                                                      
+AUTOR=(00,DT),                AUTORxx                                      
+IZU=AS,                       IZUPRMxx                                     
+CMB=(UNITR,COMM,GRAPH,CHRDR),    ADDITIONAL CMB ENTRIES                    
+CMD=CS,                       COMMNDxx                                     
+CON=(00,NOJES3),              CONSOLxx                                     
+COUPLE=00,                    COUPLExx                                     
+CSA=(3000,400000),            CSA-RANGE                                    
+DIAG=00,                      DIAGxx  (Auto-Ipl)                           
+DUMP=DASD,                    PLACE SVC DUMPS ON DASD DEVICES              
+FIX=00,                       IEAFIXxx  (FIX MODULES SPECIFIED)            
+GRS=NONE,                     NO COORDINATION OF GRS REQUESTS              
+HZSPROC=*NONE,                                                             
+ILMMODE=NONE,                 EXPLICITLY DISABLE LICENSE MANAGER           
+LNKAUTH=LNKLST,               AUTHORIZE LNKLST00, APFTAB IS ALTERNATE      
+LOGCLS=L,                     WILL NOT BE PRINTED BY DEFAULT               
+LOGLMT=999999,                MAX WTL MESSAGES QUEUED, MUST BE 6 DIGITS    
+LOGREC=SYS1.&SYSNAME..LOGREC, ERROR RECORDING                           
+LPA=00,                       LPALSTxx                                  
+MAXUSER=250,                  SYS-TASKS+INITS+TSOUSERS                  
+MLPA=00,                      IEALPAxx                                  
+MSTRJCL=00,                   MSTJCLxx, MASTER JCL                      
+OMVS=(00,01,BP,IZ,RZ,ZW,PY),      BPXPRMxx                              
+OPI=YES,                      ALLOW OPERATOR OVERRIDE                   
+PAGE=(SYS1.&SYSNAME..PLPA.PAGE,                                         
+      SYS1.&SYSNAME..COMMON.PAGE,                                       
+      SYS1.&SYSNAME..LOCALA.PAGE,                                       
+      SYS1.&SYSNAME..LOCALB.PAGE,L),                                    
+PAK=00,                       IEAPAKxx                                  
+PLEXCFG=ANY,                                                            
+PROG=(AB,A0,A2,AM,ZW,NV,      DYNAMIC APF LIST                          
+      SY,LB,LM,L0,L2,LL),     LINKLIST LL SUFFIX SHOULD BE LAST         
+REAL=128,                     ALLOWS 2 64K OR 1 128K JOB TO RUN V=R     
+RSU=0,                        NO RECONFIG STORAGE UNITS                 
+RSVNONR=100,                  RESERVED ASVT ENTRIES                     
+RSVSTRT=5,                    RESERVED ASVT ENTRIES                 
+SCH=(00,ZW),                  SCHEDxx                               
+SMF=00,                       SMFPRMxx                              
+SQA=(15,64),                  SQA SIZE APPROX 640K                  
+SSN=00,                       IEFSSNxx                              
+PROD=(00,01),                 PLEASE NOTE IFAPRD01                  
+SVC=00,                       IEASVCxx  (USER SVCS)                 
+VAL=00,                       SELECT VATLST00                       
+VIODSN=SYS1.&SYSNAME..STGINDEX,    VIO DS                           
+VRREGN=64                     DEFAULT REAL-STORAGE REGION SIZE      
+******************************** Bottom of Data ********************
+
+
+
+
+
+ BROWSE    FEU.Z25B.PARMLIB(IEASYS00) - 01.03       Line 0000000000 Col 001
+ Command ===>                                                  Scroll ===> 
+********************************* Top of Data *****************************
+CLOCK=00,                       SELECT CLOCK00                             
+CLPA,                                                                      
+AUTOR=(00,DT),                                                             
+IZU=AS,                                                                    
+CMB=(UNITR,COMM,GRAPH,CHRDR),   ADDITIONAL CMB ENTRIES                     
+CMD=WS,                                                                    
+CON=(00,NOJES3),                SELECT CONSOL00                            
+COUPLE=00,                      ALL LOCAL                                  
+CSA=(3000,400000),              CSA RANGE                                  
+DIAG=00,                        SELECT DIAG00, DIAGNOSTIC COMMANDS         
+DUMP=DASD,                      PLACE SVC DUMPS ON DASD DEVICES            
+FIX=00,                         SELECT IEAFIX00, FIX MODULES SPECIFIED     
+GRS=NONE,                       NO COORDINATION OF GRS REQUESTS            
+HZSPROC=*NONE,                                                             
+ILMMODE=NONE,                   EXPLICITLY DISABLE LICENSE MANAGER         
+LNKAUTH=LNKLST,                 AUTHORIZE LNKLST00, APFTAB IS ALTERNATE    
+LOGCLS=L,                       WILL NOT BE PRINTED BY DEFAULT             
+LOGLMT=999999,                  MAX WTL MESSAGES QUEUED,MUST BE 6 DIGITS   
+
+
+
+
+IMPORTANTE : EL PRIMER TEMPLATE QUE SE CREA ES EL MASTER ADRESS SPACE.
+
+
+
+ ------------------------------------------------------------------------------
+ SDSF DA S0W1     S0W1     PAG  0  CPU/L     9/  9      LINE 1-18 (68)         
+ COMMAND INPUT ===>                                            SCROLL ===> CSR 
+ NP   JOBNAME  StepName ProcStep JobID    Owner    C Pos DP Real Paging    SIO 
+      *MASTER*                   STC00002 +MASTER+   NS  FF 2399   0.00   0.00 
+      PCAUTH   PCAUTH                                NS  FF  111   0.00   0.00 
+      RASP     RASP                                  NS  FF  298   0.00   0.00 
+      TRACE    TRACE                                 NS  FF  349   0.00   0.00 
+      DUMPSRV  DUMPSRV  DUMPSRV                      NS  FF  447   0.00   0.00 
+
+
+
+
+ARRANQUE DEL JES2 :
+
+
+
+ BROWSE    ADCD.Z25B.PARMLIB(COMMNDCS) - 01.25      Line 0000
+ Command ===>                                                
+********************************* Top of Data ***************
+COM='S JES2,PARM='COLD,NOREQ''                               
+COM='S VLF,SUB=MSTR'                                         
+COM='S HZR,SUB=MSTR'                                         
+COM='S VTAM'                                                 
+COM='S VTAM00'                                               
+COM='S DLF,SUB=MSTR'                                         
+COM='DD ADD,VOL=B5SYS1'                                      
+COM='DD NAME=SYS1.&SYSNAME..&SYSVER..DMP&SEQ'                
+COM='DD ALLOC=ACTIVE'                                        
+******************************** Bottom of Data *************
+
+
+
+
+ BROWSE    ADCD.Z25B.PROCLIB(JES2) - 01.12          Line 0000000000
+ Command ===>                                                  Scro
+********************************* Top of Data *********************
+//JES2      PROC MEMBER=JES2PARM,ALTMEM=JES2BACK                   
+//IEFPROC   EXEC PGM=HASJES20,DPRTY=(15,15),TIME=1440,PERFORM=9    
+//ALTPARM   DD   DSN=ADCD.&SYSVER..PARMLIB(&ALTMEM),DISP=SHR       
+//HASPPARM  DD   DSN=ADCD.&SYSVER..PARMLIB(&MEMBER),DISP=SHR       
+//PROC00    DD   DSN=USER.&SYSVER..PROCLIB,DISP=SHR                
+//          DD   DSN=FEU.&SYSVER..PROCLIB,DISP=SHR                 
+//          DD   DSN=ADCD.&SYSVER..PROCLIB,DISP=SHR                
+//          DD   DSN=CEE.SCEEPROC,DISP=SHR                         
+//          DD   DSN=CSQ920.SCSQPROC,DISP=SHR                      
+//          DD   DSN=IOE.SIOEPROC,DISP=SHR                         
+//          DD   DSN=HLA.SASMSAM1,DISP=SHR                         
+//          DD   DSN=CBC.SCCNPRC,DISP=SHR                          
+//          DD   DSN=SYS1.PROCLIB,DISP=SHR                         
+//HASPLIST  DD   DDNAME=IEFRDER                                    
+******************************** Bottom of Data *******************
+
+
+
+
+ BROWSE    ADCD.Z25B.PARMLIB(JES2BACK) - 01.28      Line 0000000000 Col
+ Command ===>                                                  Scroll =
+********************************* Top of Data *************************
+/*****PROPRIETARY-STATEMENT*******************************************/
+/*                                                                   */
+/*     LICENSED MATERIALS-PROPERTY OF IBM                            */
+/*     THIS SAMPLE IS "RESTRICTED MATERIALS OF IBM"                  */
+/*     5647-A01 (C) COPYRIGHT IBM CORP 1994, 1997                    */
+/*                                                                   */
+/*     STATUS:  HJE6604                                              */
+/*                                                                   */
+/*****END-OF-PROPRIETARY-STATEMENT************************************/
+/*********************************************************************/
+/*                                                                   */
+/* SYNTAX RULES for JES2 Initialization Statements:                  */
+/*                                                                   */
+/*   - Statements may be coded free-form in Columns 1 through 71     */
+/*   - Column 72 may be used for a Continuation Character, but is    */
+/*     NOT Required.  A trailing comma indicates continuation.       */
+/*   - Comments and Blanks may appear anywhere before, after, or     */
+/*     in-between statements, parameters, and delimiters.            */
+
+
+
+
+
+/////////////////
+
+
+
+MIDDLEWARE FOR z/OS
+
+
+
+
+El **middleware para z/OS** es un conjunto de herramientas, servicios y software que actúan como intermediarios entre el sistema operativo z/OS, las aplicaciones y otros sistemas. Su propósito principal es facilitar la integración, comunicación y operación eficiente de aplicaciones en entornos empresariales complejos. Este middleware permite a las organizaciones gestionar y escalar sus sistemas de manera efectiva, optimizando el rendimiento y la interoperabilidad.
+
+---
+
+### **Características Principales del Middleware para z/OS**
+1. **Integración de Aplicaciones:**
+   - Permite conectar aplicaciones distribuidas y centralizadas.
+   - Proporciona soporte para protocolos estándar como HTTP, SOAP, REST, y mensajes MQ.
+   
+2. **Escalabilidad y Confiabilidad:**
+   - Diseñado para manejar grandes volúmenes de transacciones con alta disponibilidad.
+   - Compatible con configuraciones sysplex para balanceo de carga y tolerancia a fallos.
+
+3. **Seguridad:**
+   - Integra servicios de seguridad como autenticación y autorización (por ejemplo, usando RACF).
+   - Soporta estándares como TLS/SSL para comunicaciones seguras.
+
+4. **Gestión de Datos:**
+   - Facilita el acceso y la manipulación de datos en bases de datos (IMS DB, Db2, VSAM) y datasets tradicionales.
+
+5. **Comunicación:**
+   - Implementa servicios de mensajería para facilitar la interacción entre sistemas heterogéneos.
+
+---
+
+### **Ejemplos de Middleware para z/OS**
+Aquí hay algunos ejemplos destacados de middleware disponibles para z/OS:
+
+#### **1. IBM CICS (Customer Information Control System)**
+   - **Propósito:** Middleware transaccional que gestiona aplicaciones online de alta concurrencia.
+   - **Uso:** Ideal para sistemas bancarios, de seguros y de telecomunicaciones.
+   - **Características:**
+     - Soporte para servicios web (SOAP/REST).
+     - Administración de transacciones distribuidas.
+     - Integración con bases de datos (Db2, IMS).
+
+#### **2. IBM MQ (Message Queue)**
+   - **Propósito:** Middleware de mensajería que permite la comunicación asíncrona entre aplicaciones distribuidas.
+   - **Uso:** Integración de sistemas heterogéneos en tiempo real o diferido.
+   - **Características:**
+     - Garantía de entrega de mensajes (once and only once).
+     - Soporte multiplataforma (Windows, Linux, z/OS, etc.).
+     - Compatible con estándares como JMS.
+
+#### **3. IMS (Information Management System)**
+   - **Propósito:** Proporciona servicios para la gestión de bases de datos jerárquicas y procesamiento de transacciones.
+   - **Uso:** Principalmente en sectores como manufactura y finanzas.
+   - **Características:**
+     - Soporte para Fast Path para alta velocidad de transacciones.
+     - APIs para integración con aplicaciones externas.
+
+#### **4. WebSphere Application Server (WAS) para z/OS**
+   - **Propósito:** Middleware de aplicación basado en Java EE para ejecutar aplicaciones empresariales.
+   - **Uso:** Implementación de aplicaciones web y servicios web.
+   - **Características:**
+     - Compatibilidad con JEE.
+     - Soporte para contenedores de aplicaciones y EJBs.
+     - Integración con otros productos de IBM como Db2.
+
+#### **5. z/OS Connect Enterprise Edition**
+   - **Propósito:** Expone recursos del mainframe como APIs RESTful.
+   - **Uso:** Facilita la modernización e integración con aplicaciones modernas.
+   - **Características:**
+     - Transforma servicios CICS, IMS y Db2 en APIs RESTful.
+     - Simplifica la integración con aplicaciones en la nube.
+
+#### **6. Db2 para z/OS**
+   - **Propósito:** Middleware de base de datos relacional.
+   - **Uso:** Gestión de datos estructurados con alta disponibilidad.
+   - **Características:**
+     - Soporte para SQL y APIs.
+     - Alta escalabilidad para entornos OLTP y analíticos.
+
+#### **7. RACF (Resource Access Control Facility)**
+   - **Propósito:** Middleware de seguridad para gestionar acceso a recursos en z/OS.
+   - **Uso:** Autenticación, autorización y auditoría de acceso.
+   - **Características:**
+     - Soporte para perfiles de usuarios y grupos.
+     - Integración con otros middleware para garantizar seguridad en aplicaciones.
+
+#### **8. TCP/IP y VTAM**
+   - **Propósito:** Facilitan la comunicación de red en z/OS.
+   - **Uso:** Gestión de conectividad y comunicaciones (HTTP, FTP, Telnet, etc.).
+   - **Características:**
+     - Soporte para IPv4/IPv6.
+     - Integración con aplicaciones y servicios empresariales.
+
+---
+
+### **Beneficios del Middleware en z/OS**
+1. **Modernización:** Habilita el uso de APIs y servicios modernos para integrar mainframes con sistemas distribuidos.
+2. **Interoperabilidad:** Facilita la comunicación entre sistemas heterogéneos.
+3. **Optimización de Recursos:** Mejora el rendimiento al administrar de forma eficiente los recursos del sistema.
+4. **Confiabilidad:** Garantiza la disponibilidad y consistencia en entornos críticos.
+5. **Escalabilidad:** Permite manejar aumentos en la carga transaccional sin afectar el rendimiento.
+
+---
+
+El middleware en z/OS es clave para mantener la relevancia y funcionalidad de los mainframes en el mundo empresarial moderno, sirviendo como puente entre tecnologías tradicionales y emergentes.
+
+
+
+
+
+
+APIS DE MIDDLEWARE DE MAINFRAME
+
+
+Las **APIs de middleware de mainframe** permiten a los desarrolladores integrar y extender las funcionalidades de las aplicaciones y servicios alojados en el mainframe con sistemas modernos y distribuidos. Estas APIs son clave para conectar aplicaciones legacy con tecnologías actuales como aplicaciones web, móviles, y servicios en la nube.
+
+A continuación, algunos ejemplos destacados de APIs de middleware para mainframe:
+
+---
+
+### **1. IBM z/OS Connect Enterprise Edition (EE)**
+
+   - **Propósito:** Facilita la creación y exposición de APIs RESTful para interactuar con aplicaciones y datos del mainframe.
+   - **Características:**
+     - Convierte servicios IMS, CICS, y Db2 en APIs RESTful.
+     - Proporciona soporte nativo para JSON.
+     - Fácil integración con plataformas modernas (nubes, aplicaciones móviles).
+   - **Casos de Uso:**
+     - Exponer datos de clientes almacenados en Db2 a aplicaciones web.
+     - Conectar transacciones IMS con microservicios en contenedores Docker.
+
+---
+
+### **2. IBM CICS APIs**
+
+   - **Propósito:** APIs para interactuar con servicios y transacciones en el entorno CICS.
+   - **APIs Disponibles:**
+     - **CICS Web Services:** Ofrece servicios SOAP y REST para exponer funcionalidades de CICS.
+     - **CICS Transaction Gateway (CTG):** API basada en Java para conectar aplicaciones externas con transacciones CICS.
+   - **Casos de Uso:**
+     - Exponer transacciones financieras a una aplicación móvil.
+     - Integrar sistemas de facturación legacy con aplicaciones modernas.
+
+---
+
+### **3. IBM MQ REST API**
+
+   - **Propósito:** Permite gestionar colas y mensajes de IBM MQ a través de APIs RESTful.
+   - **Características:**
+     - Enviar, recibir, y gestionar mensajes en colas.
+     - Supervisar el estado de las colas y configuraciones de IBM MQ.
+   - **Casos de Uso:**
+     - Integrar sistemas distribuidos con procesos batch en el mainframe.
+     - Automatizar la gestión de mensajería entre sistemas heterogéneos.
+
+---
+
+### **4. Db2 para z/OS REST API**
+
+   - **Propósito:** Proporciona acceso directo a datos de Db2 desde aplicaciones externas mediante REST.
+   - **Características:**
+     - Ejecución de consultas SQL a través de HTTP.
+     - Retorno de datos en formato JSON.
+     - Integración segura con autenticación basada en tokens.
+   - **Casos de Uso:**
+     - Recuperar datos de ventas desde Db2 para visualización en dashboards.
+     - Conectar aplicaciones web con bases de datos relacionales en z/OS.
+
+---
+
+### **5. IMS SOAP Gateway y REST API**
+
+   - **Propósito:** Exponer aplicaciones IMS como servicios web.
+   - **Características:**
+     - Transforma transacciones IMS en servicios RESTful o SOAP.
+     - Simplifica la integración de sistemas distribuidos con bases de datos IMS.
+   - **Casos de Uso:**
+     - Conectar aplicaciones móviles con datos jerárquicos en IMS DB.
+     - Exponer transacciones críticas de IMS como microservicios.
+
+---
+
+### **6. RACF APIs**
+
+   - **Propósito:** Proveer capacidades de autenticación y autorización para sistemas externos que interactúan con el mainframe.
+   - **APIs Disponibles:**
+     - **R_admin:** Administrar perfiles y políticas de seguridad.
+     - **IRRSIA00:** API para validar contraseñas y credenciales de usuarios.
+   - **Casos de Uso:**
+     - Validar accesos de usuarios en aplicaciones externas.
+     - Integrar la gestión de seguridad con soluciones empresariales modernas.
+
+---
+
+### **7. WebSphere Application Server (WAS) APIs**
+
+   - **Propósito:** Ofrece APIs para integrar aplicaciones Java EE alojadas en z/OS con otros sistemas.
+   - **Características:**
+     - Soporte para EJBs, servlets, y servicios REST.
+     - Integración con bases de datos como Db2.
+   - **Casos de Uso:**
+     - Exponer lógica de negocios desarrollada en Java como un servicio web.
+     - Integrar aplicaciones empresariales con servicios de terceros.
+
+---
+
+### **8. Open Mainframe APIs**
+
+   - **Propósito:** APIs de código abierto y modernas para trabajar con recursos en z/OS.
+   - **Ejemplos:**
+     - **zowe API Layer:** Proporciona un conjunto de APIs RESTful para interactuar con recursos de z/OS (datasets, trabajos, y sistemas).
+     - **Zowe CLI:** Basada en APIs para automatizar tareas en z/OS desde herramientas modernas.
+   - **Casos de Uso:**
+     - Automatización de tareas DevOps en mainframe.
+     - Integrar la gestión de trabajos (JCL) en pipelines CI/CD.
+
+---
+
+### **9. SMF (System Management Facility) APIs**
+
+   - **Propósito:** Acceso a datos de métricas y logs de rendimiento del sistema.
+   - **Características:**
+     - APIs para recopilar y analizar datos de rendimiento.
+     - Exportación de datos para herramientas de monitoreo externo.
+   - **Casos de Uso:**
+     - Analizar datos de uso de recursos en tiempo real.
+     - Conectar herramientas de monitoreo empresarial con métricas del mainframe.
+
+---
+
+### **10. APIs de TCP/IP para z/OS**
+
+   - **Propósito:** Ofrecer capacidades de red avanzadas para aplicaciones que requieren comunicación TCP/IP.
+   - **Características:**
+     - Soporte para protocolos estándar (FTP, Telnet, SMTP).
+     - APIs para construir aplicaciones cliente/servidor.
+   - **Casos de Uso:**
+     - Desarrollar aplicaciones que interactúan con sistemas distribuidos.
+     - Facilitar la transferencia segura de datos entre mainframes y servidores externos.
+
+---
+
+### **Beneficios de Usar APIs de Middleware en Mainframe**
+
+- **Modernización:** Permiten integrar aplicaciones legacy con tecnologías modernas.
+- **Flexibilidad:** Facilitan la adopción de arquitecturas basadas en microservicios.
+- **Interoperabilidad:** Garantizan la comunicación fluida entre sistemas heterogéneos.
+- **Seguridad:** Mantienen los estándares de seguridad y control del mainframe.
+
+Estas APIs permiten a las empresas maximizar el valor de sus sistemas mainframe mientras los conectan con la infraestructura tecnológica moderna.
+
+
+
+
+*********************
+
+
+CLASE 26/11/2024
+
+
+TSO ISHELL
+
+
+B5USR1
+
+IRR52174I Incorrect UID 0.  This value is already in use by IBMUSER.
+***                                                                 
+
+
+
+
+*******************
+
+
+
+CLASE 27/11/24
+
+
+TSO ISHELL
+
+
+/D SYMBOLS
+
+
+ SDSF MENU V2R5M0    ADCDPL    S0W1                        6 RESPONS
+ COMMAND INPUT ===>                                            SCROL
+ RESPONSE=S0W1                                                      
+  IEA007I STATIC SYSTEM SYMBOL VALUES 494                           
+   &SYSALVL.          = "2"                                         
+   &SYSCLONE.         = "1A"                                        
+   &SYSNAME.          = "S0W1"                                      
+   &SYSOSLVL.         = "Z1020500"                                  
+   &SYSPLEX.          = "ADCDPL"                                    
+   &SYSR1.            = "B5RES1"                                    
+   &ADCDLVL.          = "ADCD25B"                                   
+   &CNMDOMN.          = "CNM01"                                     
+   &DEFAULTROUTEADDR. = "172.26.1.1"                                
+   &EPHEMERALPORTS.   = "10000 65534"                               
+   &GBLRESL.          = "GBLRESOL"                                  
+   &HOMEIPADDRESS1.   = "172.26.1.2"                                
+   &SYSC1.            = "B5CFG1"                                    
+   &SYSP1.            = "B5PRD1"                                    
+   &SYSP2.            = "B5PRD2"                                    
+   &SYSP3.            = "B5PRD3"                                    
+   &SYSP4.            = "B5PRD4"                                    
+
+
+
+USER.Z25B.PARMLIB(IEASYMOO)
+
+
+
+ BROWSE    USER.Z25B.PARMLIB(IEASYM00)              Line 000000
+ Command ===>                                                  
+********************************* Top of Data *****************
+SYSDEF  SYSNAME(S0W1)                                          
+        SYSCLONE(1A)                                           
+        SYMDEF(&UNIXVER='Z25B')                                
+        SYMDEF(&SYSVER='Z25B')                                 
+        SYMDEF(&ADCDLVL='ADCD25B')                             
+        SYMDEF(&SYSP1.='B5PRD1')                               
+        SYMDEF(&SYSP2.='B5PRD2')                               
+        SYMDEF(&SYSP3.='B5PRD3')                               
+        SYMDEF(&SYSP4.='B5PRD4')                               
+        SYMDEF(&SYSP5.='B5PRD5')                               
+        SYMDEF(&SYSR2.='B5RES2')                               
+        SYMDEF(&SYSS1.='B5SYS1')                               
+        SYMDEF(&SYSC1.='B5CFG1')                               
+                                                               
+/*  Begin Ansible Block Insert  */                             
+SYMDEF(&HOMEIPADDRESS1.='172.26.1.2')                          
+SYMDEF(&DEFAULTROUTEADDR.='172.26.1.1')                        
+SYMDEF(&GBLRESL.='GBLRESOL')                                   
+SYMDEF(&GBLRESL.='GBLRESOL')                              
+SYMDEF(&TCPPROF='PROF2')                                  
+SYMDEF(&EPHEMERALPORTS.='10000 65534')                    
+SYMDEF(&CNMDOMN='CNM01')                                  
+/*  End Ansible Block Insert */                           
+******************************** Bottom of Data **********
+
+
+
+
+COMANDO : 
+
+/D D,ST
+
+DISPLAY DUMP STATUS
+
+
+ SDSF MENU V2R5M0    ADCDPL    S0W1                      COMMAND ISSU
+ COMMAND INPUT ===>                                            SCROLL
+ RESPONSE=S0W1                                                       
+  IEE852I 07.28.00 SYS1.DUMP STATUS 534                              
+  SYS1.DUMP DATA SETS AVAILABLE=000 AND FULL=000                     
+  CAPTURED DUMPS=0000, SPACE USED=00000000M, SPACE FREE=00000500M    
+  AUTOMATIC ALLOCATION IS: ACTIVE                                    
+     NO SMS CLASSES DEFINED                                          
+     AVAILABLE DASD VOLUMES: B5SYS1                                  
+     NAME=SYS1.&SYSNAME..&SYSVER..DMP&SEQ                            
+        EXAMPLE=SYS1.S0W1.Z25B.DMP00000                              
+
+
+&SYSNAME=S0W1
+&SYSVER=Z25B
+DMP%SEQ=DMP00000
+
+
+HLQ.LPAR.VER.XXXXXXXXX
+
+
+
+COMANDO :
+
+SETLOAD  88,IEASYM,DSN=SYS1.IPLPARM
+
+
+
+LIBRERIAS APF :
+
+SON LIBRERIAS DE ACCESO AUTORIZADO.
+
+
+FEU.Z25B.PARMLIB(PROGAU)
+
+
+
+
+
+SYS1.LINKLIB  :  ESTAN LOS MODULOS EJECUTABLES.
+
+
+BRO
+
+BROWSE            SYS1.LINKLIB                          Row 0004416 of 0004483
+Command ===>                                                  Scroll ===> CSR 
+           Name     Prompt        Alias-of     Size      TTR     AC   AM   RM 
+_________ LU                      IRRENV00   00055B70   044B13   01    31   24
+_________ MCSTORE                            00001090   00B434   00    31   24
+_________ MSTJCL00                IEEMSJCL   00000230   00D920   00    24   24
+
+
+
+
+
+ BROWSE    USER.Z25B.PARMLIB(MSTJCL00) - 01.08      Line 0000000000 Col 
+ Command ===>                                                  Scroll ==
+********************************* Top of Data **************************
+//MSTJCL00   JOB  MSGLEVEL=(1,1),TIME=1440                              
+//            EXEC  PGM=IEEMB860,DPRTY=(15,15)                          
+//*                                                                     
+//STCINRDR  DD SYSOUT=(A,INTRDR)                                        
+//TSOINRDR  DD SYSOUT=(A,INTRDR)                                        
+//*                                                                     
+//IEFPDSI   DD DISP=SHR,DSN=USER.&SYSVER..PROCLIB                       
+//          DD DISP=SHR,DSN=FEU.&SYSVER..PROCLIB                        
+//          DD DISP=SHR,DSN=ADCD.&SYSVER..PROCLIB                       
+//          DD DISP=SHR,DSN=SYS1.PROCLIB                                
+//*                                                                     
+//IEFJOBS   DD DISP=SHR,DSN=USER.&SYSVER..PROCLIB                       
+//*                                                                     
+//SYSUADS   DD DISP=SHR,DSN=SYS1.UADS                                   
+//SYSLBC    DD DISP=SHR,DSN=SYS1.BRODCAST                               
+//*------------------------------------------------------------------*  
+//*                        ---  FIN  ---                             *  
+//*------------------------------------------------------------------*  
+
+
+
+
+CONSOLAS :
+
+
+ADCD.Z25B.PARMLIB(CONSOL00)
+
+
+ BROWSE    ADCD.Z25B.PARMLIB(CONSOL00) - 01.03      Line 0000000000 
+ Command ===>                                                  Scrol
+********************************* Top of Data **********************
+INIT     CMDDELIM(")                                                
+         MLIM(1500)                                                 
+         MONITOR(DSNAME)                                            
+         MPF(00)                                                    
+         PFK(00)                                                    
+         RLIM(10)                                                   
+         UEXIT(N)                                                   
+         CNGRP(00)                                                  
+         AMRF(N)                                                    
+DEFAULT ROUTCODE(ALL)                                               
+CONSOLE                                                             
+  DEVNUM(700)                                                       
+  AUTH(MASTER)                                                      
+  CON(N)                                                            
+  DEL(R)                                                            
+  MFORM(J,T)                                                        
+  MONITOR(JOBNAMES-T)                                               
+  NAME(L700)                                                        
+
+
+
+ARRANQUE DEL JES2
+
+
+FEU.Z25B.PROCLIB(JES2)
+
+
+ BROWSE    FEU.Z25B.PROCLIB(JES2) - 01.05           Line 0000000000 Co
+ Command ===>                                                  Scroll 
+********************************* Top of Data ************************
+//JES2      PROC MEMBER=JES2PARM,ALTMEM=JES2BACK                      
+//IEFPROC   EXEC PGM=HASJES20,DPRTY=(15,15),TIME=1440,PERFORM=9       
+//ALTPARM   DD   DSN=ADCD.&SYSVER..PARMLIB(&ALTMEM),DISP=SHR          
+//HASPPARM  DD   DSN=FEU.&SYSVER..PARMLIB(&MEMBER),DISP=SHR           
+//PROC00    DD   DSN=USER.&SYSVER..PROCLIB,DISP=SHR                   
+//          DD   DSN=FEU.&SYSVER..PROCLIB,DISP=SHR                    
+//          DD   DSN=ADCD.&SYSVER..PROCLIB,DISP=SHR                   
+//          DD   DSN=SYS1.PROCLIB,DISP=SHR                            
+//HASPLIST  DD   DDNAME=IEFRDER                                       
+******************************** Bottom of Data **********************
+
+
+
+IPL :  RECOMENDACION USAR ARRANQUE EN FRIO (COLD START)----CLPA
+
+CLPA,
+
+
+ BROWSE    FEU.Z25B.PARMLIB(IEASYSCS) - 01.11       Line 000000
+ Command ===>                                                  
+********************************* Top of Data *****************
+CLOCK=00,                     CLOCKxx                          
+CLPA,                                                          
+AUTOR=(00,DT),                AUTORxx                           
+IZU=AS,                       IZUPRMxx                          
+CMB=(UNITR,COMM,GRAPH,CHRDR),    ADDITIONAL CMB ENTRIES         
+CMD=CS,                       COMMNDxx                          
+
+
+
+
+
+Using SMP/E
+
+
+
+DSLIST - Data Sets Matching **.CSI                              Row 161 of 438
+Command ===>                                                  Scroll ===> PAGE
+                                                                              
+Command - Enter "/" to select action                  Message           Volume
+------------------------------------------------------------------------------
+         DFH560.DFH560D.CSI.DATA                                        B5C560
+         DFH560.DFH560D.CSI.INDEX                                       B5C560
+         DFH560.DFH560T.CSI                                             *VSAM*
+         DFH560.DFH560T.CSI.DATA                                        B5C560
+         DFH560.DFH560T.CSI.INDEX                                       B5C560
+         DFH560.GLOBAL.CSI                                              *VSAM*
+         DFH560.GLOBAL.CSI.DATA                                         B5C560
+         DFH560.GLOBAL.CSI.INDEX                                        B5C560
+         DFSF10.DFSF10D.CSI                                             *VSAM*
+         DFSF10.DFSF10D.CSI.DATA                                        B5IMF1
+         DFSF10.DFSF10D.CSI.INDEX                                       B5IMF1
+         DFSF10.DFSF10T.CSI                                             *VSAM*
+         DFSF10.DFSF10T.CSI.DATA                                        B5IMF1
+         DFSF10.DFSF10T.CSI.INDEX                                       B5IMF1
+         DFSF10.GLOBAL.CSI                                              *VSAM*
+         DFSF10.GLOBAL.CSI.DATA                                         B5IMF1
+
+
+
+
+
+DSLIST - Data Sets Matching **.MVS                               Catalog error 
+Command ===>                                                  Scroll ===> PAGE 
+                                                                               
+Command - Enter "/" to select action                  Message           Volume 
+-------------------------------------------------------------------------------
+         MVS                                                            *ALIAS 
+         MVS.GLOBAL.CSI                                                 *VSAM* 
+         MVS.GLOBAL.CSI.DATA                                            B5DIS1 
+         MVS.GLOBAL.CSI.INDEX                                           B5DIS1 
+         MVS.GLOBAL.SMPPTS1                                             B5DIS3 
+         MVS.GLOBAL.SMPPTS2                                             B5DIS3 
+         MVS.GLOBAL.SMPPTS3                                             B5DIS3 
+         MVS.GLOBAL.SMPPTS4                                             B5DIS3 
+         MVS.GLOBAL.SMPPTS5                                             B5DIS3 
+         MVS.MVSD.CSI                                                   *VSAM* 
+         MVS.MVSD.CSI.DATA                                              B5DIS1 
+         MVS.MVSD.CSI.INDEX                                             B5DIS1 
+         MVS.MVST.CSI                                                   *VSAM* 
+         MVS.MVST.CSI.DATA                                              B5DIS1 
+         MVS.MVST.CSI.INDEX                                             B5DIS1 
+         MVS.MVST.SMPLTS                                                B5DIS3 
+
+
+
+
+FIXES
+
+
+ BROWSE    MVS.GLOBAL.SMPPTS2(UJ07033)              Line 0000000000 Col 00
+ Command ===>                                                  Scroll ===>
+********************************* Top of Data ****************************
+++ PTF (UJ07033)        /*                                                
+//UJ07033  JOB 5752-07033,SC1CR,MSGLEVEL=(1,1),CLASS=A     */  .          
+++ VER (Z038)                                                             
+   FMID(HBB77D0)                                                          
+   PRE  (UJ05832,UJ05480)                                                 
+   SUP  (UJ06016,DA61368,DA61280)                                         
+ /*                                                                       
+   PROBLEM DESCRIPTION(S):                                                
+     OA61368 -                                                            
+       ****************************************************************   
+       * USERS AFFECTED: Users of HBB77B0 and above using RUCSA       *   
+       ****************************************************************   
+       * PROBLEM DESCRIPTION: ABEND0C4-10 or ABENDB78 RC5C            *   
+       *                      ATTEMPTING TO ACCESS RUCSA STORAGE.     *   
+       ****************************************************************   
+       * RECOMMENDATION:                                              *   
+       ****************************************************************   
+       -RUCSA (restricted use common service area) and VSM                
+
+
+
+
+                            IBM Products Panel                   
+ Option ===>                                                     
+                                                                 
+ 1  SMP/E       System Modification Program/Extended             
+ 2  ISMF        Integrated Storage Management Facility           
+ 3  RACF        Resource Access Control Facility                 
+ 4  HCD         Hardware Configuration Dialogs                   
+ 5  SDSF        Spool Search and Display Facility                
+ 6  IPCS        Interactive Problem Control System               
+ 7  DITTO       DITTO/ESA for MVS Version 1                      
+ 8  RMF         Resource Measurement Facility                    
+ 10 OMVS        MVS OpenEdition                                  
+ 11 MQv9.2.4    WMQ Series Operations and Control                
+ 12 WLM         Workload Manager                                 
+ 13 FMN         File Manager Operations and Control              
+ 14 RRS         Resource Recovery Services                       
+ 15 RTC         IBM ENGINEERING WORKFLOW MGMT V7.0.2             
+
+
+
+ ---------------------- SMP/E PRIMARY OPTION MENU ---------------- SMP/E 37.12  
+ ===>                                                                           
+                                                                    More:     + 
+                                                                                
+     0  SETTINGS           - Configure settings for the SMP/E dialogs           
+     1  ADMINISTRATION     - Administer the SMPCSI contents                     
+     2  SYSMOD MANAGEMENT  - Receive SYSMODs and HOLDDATA                       
+                             and install SYSMODs                                
+     3  QUERY              - Display SMPCSI information                         
+     4  COMMAND GENERATION - Generate SMP/E commands                            
+     5  RECEIVE            - Receive SYSMODs, HOLDDATA and                      
+                             support information                                
+     6  ORDER MANAGEMENT   - Manage ORDER entries in the global zone            
+                                                                                
+     D  DESCRIBE           - An overview of the dialogs                         
+     T  TUTORIAL           - Details on using the dialogs                       
+     W  WHAT IS NEW        - What is New in SMP/E                               
+                                                                                
+ Specify the name of the CSI that contains the global zone:                     
+    SMPCSI DATA SET   ===>                                                      
+ (Leave blank for a list of SMPCSI data set names.)                             
+                                                                                
+ Specify YES to have DD statements for SYSOUT and temporary                     
+
+
+
+
+
+---------------------- SMP/E PRIMARY OPTION MENU ----------------- Top of data
+===>                                                                          
+                                                                   More:     +
+                                                                              
+    0  SETTINGS           - Configure settings for the SMP/E dialogs          
+    1  ADMINISTRATION     - Administer the SMPCSI contents                    
+    2  SYSMOD MANAGEMENT  - Receive SYSMODs and HOLDDATA                      
+                            and install SYSMODs                               
+    3  QUERY              - Display SMPCSI information                        
+    4  COMMAND GENERATION - Generate SMP/E commands                           
+    5  RECEIVE            - Receive SYSMODs, HOLDDATA and                     
+                            support information                               
+    6  ORDER MANAGEMENT   - Manage ORDER entries in the global zone           
+                                                                              
+    D  DESCRIBE           - An overview of the dialogs                        
+    T  TUTORIAL           - Details on using the dialogs                      
+    W  WHAT IS NEW        - What is New in SMP/E                              
+                                                                              
+Specify the name of the CSI that contains the global zone:                    
+   SMPCSI DATA SET   ===> 'MVS.GLOBAL.CSI'                                    
+(Leave blank for a list of SMPCSI data set names.)                            
+                                                                              
+Specify YES to have DD statements for SYSOUT and temporary                    
+
+
+
+
+                             QUERY SELECTION MENU                       
+ ===> 2                                                                 
+                                                                        
+     1  CSI QUERY           - Display SMPCSI entries                    
+     2  CROSS-ZONE QUERY    - Display status of an entry in             
+                              all zones                                 
+     3  SOURCEID QUERY      - Display SOURCEIDs for specified zone      
+                                                                        
+     D  DESCRIBE            - Overview of using QUERY                   
+                                                                        
+     T  TUTORIAL            - Information on using QUERY                
+                                                                        
+ To return to the SMP/E primary option menu, enter  END .               
+
+
+
+
+                              CROSS-ZONE QUERY                              
+===>                                                                        
+                                                                            
+Specify the entry type and name to be queried:                              
+                                                                            
+   ENTRY TYPE  ===> SYSMOD   Entry type to be queried.                      
+                             To display a selection list of all valid entry 
+                             types, leave ENTRY TYPE and ENTRY NAME         
+                             blank                                          
+                                                                            
+   ENTRY NAME  ===> UI80435  Entry name to be queried.                      
+                                                                            
+                                                                            
+To return to the Query selection menu enter the END command                 
+
+
+
+
+              CSI CROSS-ZONE QUERY - ENTRY SELECTION           Row 1 to 5 o
+===>                                                          SCROLL ===>  
+                                                                           
+ Entry Type:  SYSMOD                                                       
+ Entry Name:  UI80435                                                      
+                                                                           
+ To return to the previous panel, enter END .                              
+                                                                           
+ To select an entry from a zone, enter S next to the zone.                 
+                                                                           
+      * - Entry not found in zone.                                         
+     ** - Zone could not be allocated or is not initialized.               
+                                                                           
+            -------------------- Status -----------------------------------
+    ZONE     TYPE     FMID     STATUS   DATE     TIME     REWORK           
+    -------- -------- -------- -------- -------- -------- -------- --------
+    CSQ920D  *                                                             
+    CSQ920T  *                                                             
+    GLOBAL   PTF               REC      22.199   16:38:03                  
+    MVSD     *                                                             
+    MVST     PTF      HSMA253  APP      22.199   16:47:08                  
+******************************* Bottom of data ****************************
+
+
+
+
+
+                            QUERY - ZONE SELECTION             Row 1
+===>                                                          SCROLL
+                                                                    
+Select the zone that you want to query:                             
+                                                                    
+S    NAME     TYPE      CSI DATA SET                                
+     CSQ920D  DLIB      CSQ920.CSQ920D.CSI                          
+     CSQ920T  TARGET    CSQ920.CSQ920T.CSI                          
+     GLOBAL   GLOBAL    MVS.GLOBAL.CSI                              
+     MVSD     DLIB      MVS.MVSD.CSI                                
+     MVST     TARGET    MVS.MVST.CSI                                
+******************************* Bottom of data *********************
+
+
+
+
+***************************
+
+
+
+
+CLASE 28/11/2024
+
+
+REPASO DE TEMAS.
+
+
+SMP/E.
+
+
+OSA
+
+
+                        z/OS V2.5 HCD                                         
+ Command ===> ________________________________________________________________
+                                                                              
+                            Hardware Configuration                            
+                                                                              
+ Select one of the following.                                                 
+                                                                              
+ __  0.  Edit profile options and policies                                    
+     1.  Define, modify, or view configuration data                           
+     2.  Activate or process configuration data                               
+     3.  Print or compare configuration data                                  
+     4.  Create or view graphical configuration report                        
+     5.  Migrate configuration data                                           
+     6.  Maintain I/O definition files                                        
+     7.  Query supported hardware and installed UIMs                          
+     8.  Getting started with this dialog                                     
+     9.  What's new in this release                                           
+                                                                              
+ For options 1 to 5, specify the name of the IODF to be used.                 
+                      +---------------------------------+                     
+ I/O definition file  | Copyright IBM Corp. 1990, 2021. |         +           
+  F1=Help      F2=Spl +---------------------------------+ wap     F12=Cancel  
+ F22=Command                                                                  
+
+
+
+
+
+
+
+ SDSF MENU V2R5M0    ADCDPL    S0W1                      COMMAND ISSUED  
+ COMMAND INPUT ===>                                            SCROLL ===
+ RESPONSE=S0W1                                                           
+  IEE174I 08.52.03 DISPLAY M 640                                         
+  DEVICE 00400   STATUS=ONLINE                                           
+  CHP                   A0                                               
+  ENTRY LINK ADDRESS    ..                                               
+  DEST LINK ADDRESS     0D                                               
+  PATH ONLINE           Y                                                
+  CHP PHYSICALLY ONLINE Y                                                
+  PATH OPERATIONAL      Y                                                
+  MANAGED               N                                                
+  CU NUMBER             0004                                             
+  INTERFACE ID          00A0                                             
+  MAXIMUM MANAGED CHPID(S) ALLOWED:  0                                   
+  DESTINATION CU LOGICAL ADDRESS = 00                                    
+  SCP CU ND         = 001730.001.IBM.20.208400016FFA.A000                
+  SCP TOKEN NED     = 001730.002.IBM.20.208400016FFA.A000                
+  SCP DEVICE NED    = 001732.001.IBM.20.208400016FFA.A000                
+
+
+
+/D NET,TRL
+
+
+
+SDSF MENU V2R5M0    ADCDPL    S0W1                      COMMAND ISSUED       
+COMMAND INPUT ===>                                            SCROLL ===> CSR
+RESPONSE=S0W1      IST097I DISPLAY ACCEPTED                                  
+RESPONSE=S0W1      IST350I DISPLAY TYPE = TRL                                
+RESPONSE=S0W1      IST924I --------------------------------------------------
+RESPONSE=-----------                                                         
+RESPONSE=S0W1      IST1954I TRL MAJOR NODE = ISTTRL                          
+RESPONSE=S0W1      IST1314I TRLE = IUTZCX41  STATUS = ACTIV       CONTROL =  
+RESPONSE=ZCX                                                                 
+RESPONSE=S0W1      IST1314I TRLE = IUTIQDIO  STATUS = NEVAC       CONTROL =  
+RESPONSE=MPC                                                                 
+RESPONSE=S0W1      IST1314I TRLE = IUTSAMEH  STATUS = ACTIV       CONTROL =  
+RESPONSE=MPC                                                                 
+RESPONSE=S0W1      IST1454I 3 TRLE(S) DISPLAYED                              
+RESPONSE=S0W1      IST924I --------------------------------------------------
+RESPONSE=-----------                                                         
+RESPONSE=S0W1      IST1954I TRL MAJOR NODE = OSATRL2                         
+RESPONSE=S0W1      IST1314I TRLE = OSATRL1E  STATUS = ACTIV       CONTROL =  
+RESPONSE=MPC                                                                 
+
+
+
+
+
+ENVIO A SOPORTE :
+
+
+-AMAPDUPL-
+
+
+
+
+**AMAPDUPL** es un utilitario en entornos de mainframe que forma parte de **IBM Application Performance Analyzer** (APA). Este utilitario se utiliza principalmente para identificar duplicados en los mapas de almacenamiento de segmentos de memoria utilizados por los programas de aplicaciones durante su ejecución. A continuación, se explica y se da un ejemplo sobre su uso.
+
+---
+
+### **¿Qué hace AMAPDUPL?**
+
+El utilitario **AMAPDUPL** revisa los datos de los mapas generados por el analizador de rendimiento (APA) para identificar áreas de almacenamiento duplicadas. Esto es útil en situaciones donde se desea optimizar el uso del almacenamiento o evitar redundancias que podrían afectar el rendimiento de las aplicaciones.
+
+---
+
+### **Pasos generales para usar AMAPDUPL:**
+
+1. **Preparar el entorno:**
+
+   - Asegúrate de que los datos de monitoreo generados por APA están disponibles en un dataset compatible.
+   - Los datos de entrada suelen contener mapas de almacenamiento generados por programas en ejecución.
+
+2. **Configurar el JCL:**
+   - Incluye los DD requeridos por **AMAPDUPL**.
+   - Define los datasets de entrada y salida.
+   - Especifica parámetros de control para ajustar el análisis.
+
+---
+
+### **Ejemplo de JCL con AMAPDUPL:**
+
+```
+//AMAPDUPL JOB (ACCOUNT),'IDENTIFICAR DUPLICADOS',
+//             CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+//*
+//STEP1    EXEC PGM=AMAPDUPL
+//SYSPRINT DD  SYSOUT=*
+//MAPDATA  DD  DISP=SHR,DSN=USER.MONITOR.DATA   <- Datos de monitoreo APA
+//DUPRPT   DD  SYSOUT=*                        <- Reporte de duplicados
+//SYSIN    DD  *
+   OPTION DETAIL                              <- Parámetro para reporte detallado
+/*
+//
+```
+
+---
+
+### **Explicación de los componentes del JCL:**
+
+1. **JOB Card**:
+   - Configura los detalles básicos del trabajo, como cuenta y notificación al usuario.
+
+2. **EXEC PGM=AMAPDUPL**:
+   - Especifica que se ejecutará el programa AMAPDUPL.
+
+3. **DD Statements**:
+   - **SYSPRINT**: Donde se enviarán los mensajes del sistema y de control.
+   - **MAPDATA**: Dataset de entrada que contiene los mapas de almacenamiento generados por el monitoreo de APA.
+   - **DUPRPT**: Dataset o salida donde se generará el informe de duplicados.
+
+4. **SYSIN**:
+   - Define los parámetros adicionales para controlar el comportamiento del análisis, como si se quiere un reporte detallado o resumido.
+
+---
+
+### **Salida del utilitario:**
+
+- Un informe detallado o resumido que muestra:
+  - Áreas de almacenamiento duplicadas.
+  - Tamaño de las áreas duplicadas.
+  - Información de los programas o segmentos afectados.
+
+---
+
+### **Uso típico:**
+
+Este utilitario es particularmente útil en escenarios donde:
+- Se desea identificar y corregir uso ineficiente del almacenamiento.
+- Se analizan problemas de rendimiento asociados con almacenamiento redundante.
+- Se optimiza el diseño de aplicaciones para minimizar el impacto de duplicados en producción.
+
+
+
+
+LINK DE EJEMPLO :
+
+(ri)
+11:55
+´https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://conferences.gse.org.uk/2020/presentations/2BF.pdf&ved=2ahUKEwjk2Izhn_-JAxWEq5UCHbebACoQFnoECB0QAQ&usg=AOvVaw3qwfJRo7tRY3JQcbQlI-ke
+
+
+
+
+
+*********************
+
+
+
+
